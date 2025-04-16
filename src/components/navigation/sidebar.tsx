@@ -73,7 +73,7 @@ const User = () => {
 
     const handleLogout = () => {
         logout();
-        navigate("/synchrony/auth/login");
+        navigate("/auth/login");
     };
 
     return (

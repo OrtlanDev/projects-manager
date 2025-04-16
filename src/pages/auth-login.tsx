@@ -20,7 +20,7 @@ export function LoginPage() {
         e.preventDefault();
         const success = login(username, password);
         if (success) {
-            navigate("/synchrony/dashboard/projects");
+            navigate("/dashboard/projects");
         } else {
             setError("Incorrect username or password");
         }
@@ -112,7 +112,7 @@ export function LoginPage() {
                         </Button>
                         <div className="text-sm flex-center gap-1">
                             <span className="text-muted-foreground">Don't have an account?</span>
-                            <Link to="/synchrony/auth/signup" className="underline underline-offset-4">
+                            <Link to="/auth/signup" className="underline underline-offset-4">
                                 Sign up
                             </Link>
                         </div>

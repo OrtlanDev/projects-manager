@@ -21,7 +21,7 @@ function SignupPage() {
 
         const success = register(name, email, password);
         if (success) {
-            navigate("/synchrony/dashboard/projects");
+            navigate("/dashboard/projects");
         } else {
             setError("Registration failed. Please check your information and try again.");
         }
@@ -112,7 +112,7 @@ function SignupPage() {
                     </Button>
                     <div className="text-sm flex-center gap-1">
                         <span className="text-muted-foreground">Already have an account?</span>
-                        <Link to="/synchrony/auth/login" className="underline underline-offset-4">
+                        <Link to="/auth/login" className="underline underline-offset-4">
                             Sign In
                         </Link>
                     </div>

@@ -1,5 +1,3 @@
-"use client";
-
 import { ChartContainer } from "@/components/ui/chart";
 import { PolarGrid, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 
@@ -8,7 +6,7 @@ interface RadialChartProps {
     fillColor?: string;
 }
 
-function ProjectRadialChart({ percentage, fillColor = "var(--color-safari)" }: RadialChartProps) {
+function RadialChart({ percentage, fillColor = "var(--color-safari)" }: RadialChartProps) {
     const data = [
         {
             name: "progress",
@@ -35,4 +33,4 @@ function ProjectRadialChart({ percentage, fillColor = "var(--color-safari)" }: R
     );
 }
 
-export default ProjectRadialChart;
+export default RadialChart;

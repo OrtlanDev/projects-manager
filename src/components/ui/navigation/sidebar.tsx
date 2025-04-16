@@ -49,7 +49,7 @@ function AppSidebar() {
         <Sidebar>
             <SidebarHeader className="border-b border-sidebar-border h-15 flex justify-center pl-4">
                 <div className="flex gap-2">
-                    <img src="/public/logo.svg" className="w-5" />
+                    <img src="/src/assets/logo.svg" className="w-5" />
                     <span className="font-black tracking-wider uppercase">Synchrony</span>
                 </div>
             </SidebarHeader>

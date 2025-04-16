@@ -1,57 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import ProjectRadialChart from "@/components/ui/project-radial-chart";
-import StatusBadge, { Status } from "@/components/ui/project-status";
-import { cn } from "@/lib/utils";
+
+import StatusBadge, { Status } from "@/components/ui/project/project-status";
+
 import { Separator } from "@radix-ui/react-separator";
-import { MoreVertical, Star } from "lucide-react";
-import { HTMLAttributes, ReactNode, useState } from "react";
-
-// ─── ACTION MENU ────────────────────────────────────────────────
-
-interface ActionMenuProps {
-    children: ReactNode;
-    onEdit?: () => void;
-    onDelete?: () => void;
-}
-
-const ActionMenu = ({ children, onEdit, onDelete }: ActionMenuProps) => {
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40">
-                <DropdownMenuItem onClick={onEdit}>Edit</DropdownMenuItem>
-                <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
-};
+import { MoreVertical } from "lucide-react";
+import ActionMenu from "../common/action-menu";
+import FavoriteButton from "../common/favorite-button";
+import RadialChart from "../common/radial-chart";
 
 // ─── FAVORITE BUTTON ────────────────────────────────────────────────
 
-interface FavoriteButtonProps extends HTMLAttributes<HTMLButtonElement> {
-    filled?: boolean;
-}
-
-const FavoriteButton = ({ filled = false, className, ...props }: FavoriteButtonProps) => {
-    const [status, setStatus] = useState(filled);
-
-    return (
-        <Button variant="ghost" size="icon" className={cn(className)} {...props} onClick={() => setStatus(!status)}>
-            <Star fill={status ? "currentColor" : "none"} />
-        </Button>
-    );
-};
-
 // ─── PROJECT CARD ─────────────────────────────────────────────────
 
-interface ProjectCardProps {
+export interface ProjectCardProps {
     title: string;
     status: Status;
     description: string;
@@ -59,7 +21,6 @@ interface ProjectCardProps {
     remainingDays: number;
     tasksCompleted: number;
     tasksTotal: number;
-    progressPercentage: number;
     onEdit?: () => void;
     onDelete?: () => void;
 }
@@ -72,10 +33,11 @@ const ProjectCard = ({
     remainingDays,
     tasksCompleted,
     tasksTotal,
-    progressPercentage,
     onEdit,
     onDelete,
 }: ProjectCardProps) => {
+    const progressPercentage = (100 * tasksCompleted) / tasksTotal;
+
     return (
         <Card className="w-full border border-border shadow-none">
             <CardContent>
@@ -98,7 +60,7 @@ const ProjectCard = ({
                         <CardDescription className="line-clamp-3">{description}</CardDescription>
                     </div>
 
-                    <div className="flex md:items-center md:flex-row gap-4 md:gap-2 mt-4">
+                    <div className="flex-center w-min mt-4">
                         <div className="flex items-center gap-2">
                             <div className="flex flex-col text-sm">
                                 <span className="-mb-1">{dueDate}</span>
@@ -108,9 +70,9 @@ const ProjectCard = ({
                                 </p>
                             </div>
                         </div>
-                        <Separator className="hidden md:inline-block w-0.25 h-6 bg-sidebar-border mx-4" />
+                        <Separator className="w-0.25 h-6 bg-sidebar-border mx-4" />
                         <div className="flex items-center gap-2">
-                            <ProjectRadialChart percentage={progressPercentage} />
+                            <RadialChart percentage={progressPercentage} />
                             <div className="flex flex-col">
                                 <p className="text-sm -mb-1">
                                     {tasksCompleted} / {tasksTotal}

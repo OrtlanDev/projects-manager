@@ -2,6 +2,7 @@ import { PrivateRoute } from "@/components/auth/private-route";
 import { AuthProvider } from "@/context/auth-context";
 import MainLayout from "@/layout/main-layout";
 import { LoginPage } from "@/pages/auth-login";
+import SignupPage from "@/pages/auth-signup";
 import ProjectsPage from "@/pages/projects";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
@@ -20,6 +21,7 @@ function RoutesMap() {
                     />
 
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/signup" element={<SignupPage />} />
 
                     <Route
                         path="/dashboard"
@@ -32,9 +34,6 @@ function RoutesMap() {
                         <Route index element={<Navigate to="/dashboard/projects" replace />} />
                         <Route path="projects" element={<ProjectsPage />} />
                     </Route>
-
-                    {/* Ruta catch-all para cualquier ruta no definida: redirige a /login */}
-                    <Route path="*" element={<Navigate to="/login" replace />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

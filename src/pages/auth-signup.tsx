@@ -1,34 +1,35 @@
-import PasswordRecovery from "@/components/auth/password-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
-import { cn } from "@/lib/utils";
 import { XCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export function LoginPage() {
-    const [username, setUsername] = useState("");
+function SignupPage() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { login } = useAuth();
+    const { register } = useAuth();
     const navigate = useNavigate();
-    const usernameRef = useRef<HTMLInputElement>(null);
+    const nameRef = useRef<HTMLInputElement>(null);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const success = login(username, password);
+        e.stopPropagation();
+
+        const success = register(name, email, password);
         if (success) {
             navigate("/dashboard/projects");
         } else {
-            setError("Incorrect username or password");
+            setError("Registration failed. Please check your information and try again.");
         }
     };
 
     useEffect(() => {
-        if (error && usernameRef.current) {
-            usernameRef.current.focus();
+        if (error && nameRef.current) {
+            nameRef.current.focus();
         }
     }, [error]);
 
@@ -52,22 +53,21 @@ export function LoginPage() {
                         <h1 className="text-xl font-extrabold uppercase tracking-wider">Synchrony</h1>
                         <div className="text-center text-sm text-muted-foreground">
                             Project planning and monitoring tool
-                            <br />
                         </div>
                     </div>
                     <div className="flex flex-col gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="username">Username</Label>
+                            <Label htmlFor="name">Username</Label>
                             <div className="relative">
                                 <Input
-                                    ref={usernameRef}
-                                    id="username"
+                                    ref={nameRef}
+                                    id="name"
                                     type="text"
                                     placeholder="Enter your username"
-                                    value={username}
-                                    onChange={handleInputChange(setUsername)}
+                                    value={name}
+                                    onChange={handleInputChange(setName)}
                                     required
-                                    className={cn(inputErrorClass, "pr-10")}
+                                    className={`${inputErrorClass} pr-10`}
                                 />
                                 {error && (
                                     <XCircle
@@ -78,17 +78,27 @@ export function LoginPage() {
                             </div>
                         </div>
                         <div className="grid gap-2">
-                            <div className="flex-between items-center">
-                                <Label htmlFor="password">Password</Label>
-                                <PasswordRecovery>
-                                    <button
-                                        type="button"
-                                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline bg-transparent border-none p-0 cursor-pointer text-muted-foreground"
-                                    >
-                                        Forgot your password?
-                                    </button>
-                                </PasswordRecovery>
+                            <Label htmlFor="email">Email</Label>
+                            <div className="relative">
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="example@domain.com"
+                                    value={email}
+                                    onChange={handleInputChange(setEmail)}
+                                    required
+                                    className={`${inputErrorClass} pr-10`}
+                                />
+                                {error && (
+                                    <XCircle
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500"
+                                        size={16}
+                                    />
+                                )}
                             </div>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="password">Password</Label>
                             <div className="relative">
                                 <Input
                                     id="password"
@@ -97,7 +107,7 @@ export function LoginPage() {
                                     value={password}
                                     onChange={handleInputChange(setPassword)}
                                     required
-                                    className={cn(inputErrorClass, "pr-10")}
+                                    className={`${inputErrorClass} pr-10`}
                                 />
                                 {error && (
                                     <XCircle
@@ -108,17 +118,20 @@ export function LoginPage() {
                             </div>
                         </div>
                         <Button type="submit" className="w-full">
-                            Log In
+                            Sign Up
                         </Button>
                         <div className="text-sm flex-center gap-1">
-                            <span className="text-muted-foreground">Don't have an account?</span>
-                            <Link to="/signup" className="underline underline-offset-4">
-                                Sign up
+                            <span className="text-muted-foreground">Already have an account?</span>
+                            <Link to="/login" className="underline underline-offset-4">
+                                Sign In
                             </Link>
                         </div>
+                        {error && <p className="mt-4 text-center text-sm text-red-500">{error}</p>}
                     </div>
                 </div>
             </form>
         </div>
     );
 }
+
+export default SignupPage;

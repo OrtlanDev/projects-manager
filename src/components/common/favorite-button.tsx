@@ -1,6 +1,6 @@
 import { Star } from "lucide-react";
 import { HTMLAttributes, useState } from "react";
-import { Button } from "../button";
+import { Button } from "../ui/button";
 
 interface FavoriteButtonProps extends HTMLAttributes<HTMLButtonElement> {
     filled?: boolean;

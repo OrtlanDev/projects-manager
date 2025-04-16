@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 
-import StatusBadge, { Status } from "@/components/ui/project/project-status";
+import StatusBadge, { Status } from "@/components/project/project-status";
 
 import { Separator } from "@radix-ui/react-separator";
 import { MoreVertical } from "lucide-react";

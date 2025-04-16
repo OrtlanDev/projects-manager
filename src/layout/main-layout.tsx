@@ -1,5 +1,5 @@
+import AppSidebar from "@/components/navigation/sidebar";
 import { Button } from "@/components/ui/button";
-import AppSidebar from "@/components/ui/navigation/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 

@@ -1,5 +1,5 @@
 import { projects } from "@/mock/projects";
-import ProjectCard from "../components/ui/project/project-card";
+import ProjectCard from "../components/project/project-card";
 
 function ProjectsPage() {
     return (

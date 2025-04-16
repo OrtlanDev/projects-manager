@@ -1,4 +1,4 @@
-import { Folders, LayoutGrid, ListTodo } from "lucide-react";
+import { Folders, LayoutGrid, ListTodo, LogOut, UserRoundCog } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -13,6 +13,18 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { useAuth } from "@/hooks/use-auth";
+import { useNavigate } from "react-router-dom";
 
 const items = [
     {
@@ -32,18 +44,53 @@ const items = [
     },
 ];
 
-const User = () => (
-    <div className="flex items-center w-full gap-2 cursor-pointer">
-        <Avatar className="border border-sidebar-border">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback className="text-sm">OT</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-            <p className="text-sm">Orlando Torres Rojas</p>
-            <p className="text-muted-foreground text-xs">Full Stack Developer</p>
-        </div>
-    </div>
+interface UserActionMenuProps {
+    children: React.ReactNode;
+    onLogout?: () => void;
+}
+
+export const UserActionMenu = ({ children, onLogout }: UserActionMenuProps) => (
+    <DropdownMenu>
+        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+        <DropdownMenuContent className="w-[calc(18rem-16px)] md:w-[calc(16rem-16px)]">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+                <UserRoundCog />
+                Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onLogout}>
+                <LogOut className="text-destructive" />
+                <span className="text-destructive">Log out</span>
+            </DropdownMenuItem>
+        </DropdownMenuContent>
+    </DropdownMenu>
 );
+
+const User = () => {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
+
+    return (
+        <UserActionMenu onLogout={handleLogout}>
+            <div className="flex items-center w-full gap-2 cursor-pointer">
+                <Avatar className="border border-sidebar-border">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback className="text-sm">OT</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                    <p className="text-sm">Orlando Torres Rojas</p>
+                    <p className="text-muted-foreground text-xs">Full Stack Developer</p>
+                </div>
+            </div>
+        </UserActionMenu>
+    );
+};
 function AppSidebar() {
     return (
         <Sidebar>

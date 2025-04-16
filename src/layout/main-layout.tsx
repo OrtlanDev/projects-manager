@@ -8,7 +8,7 @@ export default function MainLayout() {
         <SidebarProvider className="flex w-full">
             <AppSidebar />
             <div className="flex flex-col w-full">
-                <div className="flex-between sticky w-full px-4 h-15 bg-sidebar border-b border-sidebar-border">
+                <div className="flex-between w-full px-4 h-15 bg-sidebar border-b border-sidebar-border">
                     <SidebarTrigger />
                     <Button>New Project</Button>
                 </div>

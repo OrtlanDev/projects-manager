@@ -1,7 +1,13 @@
 import { createContext, useState } from "react";
 
+export interface User {
+    username: string;
+    email: string;
+}
+
 export interface AuthContextType {
     isAuthenticated: boolean;
+    user: User | null;
     login: (username: string, password: string) => boolean;
     logout: () => void;
     register: (username: string, email: string, password: string) => boolean;
@@ -14,6 +20,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const [isAuthenticated, setIsAuthenticated] = useState(() => {
         return storage.getItem("isAuthenticated") === "true";
+    });
+
+    const [user, setUser] = useState<User | null>(() => {
+        const storedUser = storage.getItem("authenticatedUser");
+        return storedUser ? JSON.parse(storedUser) : null;
     });
 
     const register = (username: string, email: string, password: string): boolean => {
@@ -34,25 +45,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const storedUser = JSON.parse(storedUserJSON);
             if (username === storedUser.username && password === storedUser.password) {
                 setIsAuthenticated(true);
+                setUser({ username: storedUser.username, email: storedUser.email });
                 storage.setItem("isAuthenticated", "true");
+                storage.setItem(
+                    "authenticatedUser",
+                    JSON.stringify({ username: storedUser.username, email: storedUser.email })
+                );
                 return true;
             }
         }
 
         if (username === "admin" && password === "1234") {
+            const adminUser = { username: "admin", email: "admin@synchrony.dev" };
             setIsAuthenticated(true);
+            setUser(adminUser);
             storage.setItem("isAuthenticated", "true");
+            storage.setItem("authenticatedUser", JSON.stringify(adminUser));
             return true;
         }
+
         return false;
     };
 
     const logout = () => {
         setIsAuthenticated(false);
+        setUser(null);
         storage.removeItem("isAuthenticated");
+        storage.removeItem("authenticatedUser");
     };
 
-    return <AuthContext.Provider value={{ isAuthenticated, login, logout, register }}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register }}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 export { AuthContext };

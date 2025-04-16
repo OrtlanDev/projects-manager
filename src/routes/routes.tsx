@@ -1,5 +1,6 @@
 import { PrivateRoute } from "@/components/auth/private-route";
 import { AuthProvider } from "@/context/auth-context";
+import AuthLayout from "@/layout/auth-layout";
 import MainLayout from "@/layout/main-layout";
 import { LoginPage } from "@/pages/auth-login";
 import SignupPage from "@/pages/auth-signup";
@@ -11,28 +12,35 @@ function RoutesMap() {
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <PrivateRoute>
-                                <Navigate to="/dashboard" replace />
-                            </PrivateRoute>
-                        }
-                    />
+                    <Route path="/synchrony">
+                        {/* Root */}
+                        <Route
+                            index
+                            element={
+                                <PrivateRoute>
+                                    <Navigate to="dashboard" replace />
+                                </PrivateRoute>
+                            }
+                        />
 
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/signup" element={<SignupPage />} />
+                        {/* Auth */}
+                        <Route path="auth" element={<AuthLayout />}>
+                            <Route path="login" element={<LoginPage />} />
+                            <Route path="signup" element={<SignupPage />} />
+                        </Route>
 
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <PrivateRoute>
-                                <MainLayout />
-                            </PrivateRoute>
-                        }
-                    >
-                        <Route index element={<Navigate to="/dashboard/projects" replace />} />
-                        <Route path="projects" element={<ProjectsPage />} />
+                        {/* Dashboard */}
+                        <Route
+                            path="dashboard"
+                            element={
+                                <PrivateRoute>
+                                    <MainLayout />
+                                </PrivateRoute>
+                            }
+                        >
+                            <Route index element={<Navigate to="projects" replace />} />
+                            <Route path="projects" element={<ProjectsPage />} />
+                        </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

@@ -68,12 +68,12 @@ export const UserActionMenu = ({ children, onLogout }: UserActionMenuProps) => (
 );
 
 const User = () => {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
-        navigate("/login");
+        navigate("/synchrony/auth/login");
     };
 
     return (
@@ -84,8 +84,8 @@ const User = () => {
                     <AvatarFallback className="text-sm">OT</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                    <p className="text-sm">Orlando Torres Rojas</p>
-                    <p className="text-muted-foreground text-xs">Full Stack Developer</p>
+                    <p className="text-sm">{user?.username}</p>
+                    <p className="text-muted-foreground text-xs">{user?.email}</p>
                 </div>
             </div>
         </UserActionMenu>

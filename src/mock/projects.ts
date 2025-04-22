@@ -55,6 +55,48 @@ const projects: ProjectCardProps[] = [
         tasksCompleted: 5,
         tasksTotal: 6,
     },
+    {
+        projectId: "1",
+        title: "API REST - Clima App",
+        status: "stopped",
+        description:
+            "Desarrollo de una API RESTful para obtener información meteorológica en tiempo real desde múltiples proveedores.",
+        dueDate: "04/28/2025",
+        remainingDays: 8,
+        tasksCompleted: 3,
+        tasksTotal: 10,
+    },
+    {
+        projectId: "1",
+        title: "Landing Page Freelance",
+        status: "active",
+        description: "Diseño e implementación de una landing page responsive para un cliente del sector salud.",
+        dueDate: "05/02/2025",
+        remainingDays: 17,
+        tasksCompleted: 5,
+        tasksTotal: 6,
+    },
+    {
+        projectId: "1",
+        title: "API REST - Clima App",
+        status: "stopped",
+        description:
+            "Desarrollo de una API RESTful para obtener información meteorológica en tiempo real desde múltiples proveedores.",
+        dueDate: "04/28/2025",
+        remainingDays: 8,
+        tasksCompleted: 3,
+        tasksTotal: 10,
+    },
+    {
+        projectId: "1",
+        title: "Landing Page Freelance",
+        status: "active",
+        description: "Diseño e implementación de una landing page responsive para un cliente del sector salud.",
+        dueDate: "05/02/2025",
+        remainingDays: 17,
+        tasksCompleted: 5,
+        tasksTotal: 6,
+    },
 ];
 
 export { projects };

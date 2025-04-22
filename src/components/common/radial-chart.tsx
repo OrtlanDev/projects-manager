@@ -17,7 +17,7 @@ function RadialChart({ percentage, fillColor = "var(--color-safari)" }: RadialCh
     const endAngle = percentage * -3.6; // transform from percentage to angle in radians
 
     return (
-        <ChartContainer config={{}} className="w-6 h-6 -rotate-90">
+        <ChartContainer config={{}} className="w-6 h-6 -rotate-90 ">
             <RadialBarChart data={data} startAngle={0} endAngle={endAngle} innerRadius={10} outerRadius={20}>
                 <PolarGrid
                     gridType="circle"

@@ -41,7 +41,7 @@ const ProjectCard = ({
     const progressPercentage = (100 * tasksCompleted) / tasksTotal;
 
     return (
-        <Link to={`/dashboard/projects/${projectId}`}>
+        <Link to={`/dashboard/projects/${projectId}`} className="z-0">
             <Card className="w-full border border-border shadow-none">
                 <CardContent>
                     <section>

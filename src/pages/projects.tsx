@@ -6,6 +6,7 @@ function ProjectsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {projects.map((project, index) => (
                 <ProjectCard
+                    projectId={project.projectId}
                     key={index}
                     title={project.title}
                     status={project.status}

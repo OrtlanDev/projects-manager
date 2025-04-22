@@ -2,6 +2,7 @@ import { ProjectCardProps } from "@/components/project/project-card";
 
 const projects: ProjectCardProps[] = [
     {
+        projectId: "1",
         title: "Taskify Dashboard",
         status: "planning",
         description:
@@ -12,6 +13,7 @@ const projects: ProjectCardProps[] = [
         tasksTotal: 10,
     },
     {
+        projectId: "1",
         title: "E-commerce Backend Refactor",
         status: "active",
         description:
@@ -22,6 +24,7 @@ const projects: ProjectCardProps[] = [
         tasksTotal: 16,
     },
     {
+        projectId: "1",
         title: "Portfolio v3.0",
         status: "completed",
         description:
@@ -32,6 +35,7 @@ const projects: ProjectCardProps[] = [
         tasksTotal: 12,
     },
     {
+        projectId: "1",
         title: "API REST - Clima App",
         status: "stopped",
         description:
@@ -42,6 +46,7 @@ const projects: ProjectCardProps[] = [
         tasksTotal: 10,
     },
     {
+        projectId: "1",
         title: "Landing Page Freelance",
         status: "active",
         description: "Diseño e implementación de una landing page responsive para un cliente del sector salud.",

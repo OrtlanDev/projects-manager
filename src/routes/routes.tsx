@@ -7,6 +7,7 @@ import MainLayout from "@/layout/main-layout";
 import { LoginPage } from "@/pages/auth-login-page";
 import SignupPage from "@/pages/auth-signup-page";
 import NotFoundPage from "@/pages/not-found-page";
+import TaskPage from "@/pages/project-details-page";
 import ProjectsPage from "@/pages/projects-page";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
@@ -50,6 +51,7 @@ function RoutesMap() {
                         >
                             <Route index element={<Navigate to="projects" replace />} />
                             <Route index path="projects" element={<ProjectsPage />} />
+                            <Route index path="projects/1" element={<TaskPage />} />
                         </Route>
                         {/* 404 Not Found */}
                         <Route path="*" element={<NotFoundPage />} />

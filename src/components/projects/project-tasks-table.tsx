@@ -123,7 +123,6 @@ export function ProjectTasksTable() {
                                     <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            {/* Eliminamos la prop "closeOnSelect" ya que no existe */}
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => navigator.clipboard.writeText(task.title)}>

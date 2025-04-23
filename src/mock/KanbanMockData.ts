@@ -44,7 +44,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Crear un diseño responsive para la landing page principal, considerando las mejores prácticas de UX/UI, un enfoque móvil primero, integración con herramientas analíticas y optimización SEO para mejorar la visibilidad en buscadores.",
                 dueDate: new Date("2025-04-15"),
                 attachments: [mockAttachments[0]],
-                className: "bg-red-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -54,7 +53,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Definir de manera detallada la estructura del proyecto, estableciendo carpetas, convenciones de nombres, y pautas de código para facilitar la escalabilidad, colaboración y mantenimiento a largo plazo.",
                 dueDate: new Date("2025-04-17"),
                 attachments: [],
-                className: "bg-yellow-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -64,7 +62,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Preparar una presentación completa y detallada para alinear expectativas con el cliente, incluyendo prototipos, estudios de mercado y propuestas de soluciones técnicas que aborden sus necesidades específicas y futuras integraciones.",
                 dueDate: new Date("2025-04-13"),
                 attachments: [mockAttachments[2]],
-                className: "bg-blue-100",
             },
         ],
     },
@@ -80,7 +77,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Implementar la conexión a una API de clima mediante fetch, procesar la respuesta en formato JSON y mostrar la información en el dashboard en tiempo real, asegurando la gestión de errores y actualización periódica de los datos.",
                 dueDate: new Date("2025-04-10"),
                 attachments: [],
-                className: "bg-yellow-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -90,7 +86,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Diseñar y desarrollar la vista de métricas y estadísticas utilizando Tailwind CSS, con especial atención a la legibilidad de los datos, consistencia en el estilo visual y adaptabilidad a dispositivos de distintos tamaños.",
                 dueDate: new Date("2025-04-11"),
                 attachments: [mockAttachments[4]],
-                className: "bg-blue-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -100,7 +95,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Integrar servicios de autenticación externos como Google y GitHub mediante OAuth2, asegurando el manejo correcto de tokens, seguridad en la sesión de usuario y el manejo de posibles errores durante el proceso de autenticación.",
                 dueDate: new Date("2025-04-12"),
                 attachments: [],
-                className: "bg-red-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -110,7 +104,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Revisar y optimizar la vista mobile del panel de control, asegurando la correcta adaptación de todos los elementos, facilitando la navegación y mejorando la experiencia de usuario en dispositivos móviles.",
                 dueDate: new Date("2025-04-14"),
                 attachments: [],
-                className: "bg-yellow-100",
             },
         ],
     },
@@ -126,7 +119,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Escribir y ejecutar pruebas unitarias para los nuevos componentes de React, garantizando que cumplan con la funcionalidad esperada y evitando regresiones en futuras actualizaciones del código.",
                 dueDate: new Date("2025-04-12"),
                 attachments: [],
-                className: "bg-blue-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -136,7 +128,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Realizar una revisión en profundidad del módulo de autenticación, verificando la correcta implementación de las políticas de seguridad, consistencia en la sintaxis y asegurando la calidad del código antes de realizar el merge.",
                 dueDate: new Date("2025-04-13"),
                 attachments: [],
-                className: "bg-red-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -146,7 +137,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Auditar y ajustar la consistencia en el uso de paddings, márgenes y paletas de colores en toda la aplicación, garantizando que el diseño sea coherente y responda a las guías de estilo definidas.",
                 dueDate: new Date("2025-04-15"),
                 attachments: [],
-                className: "bg-yellow-100",
             },
         ],
     },
@@ -161,7 +151,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                 description:
                     "Configurar e integrar un pipeline de CI/CD utilizando GitHub Actions para automatizar el proceso de build, testing y despliegue, asegurando una integración continua y reduciendo errores en producción.",
                 attachments: [mockAttachments[1]],
-                className: "bg-green-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -171,7 +160,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                     "Establecer la base del proyecto utilizando Vite, React y TypeScript, creando una estructura inicial óptima y escalable que permita un desarrollo ágil, modular y fácil de mantener.",
                 dueDate: new Date("2025-04-09"),
                 attachments: [],
-                className: "bg-green-100",
             },
             {
                 id: `item-${uuidv4()}`,
@@ -180,7 +168,6 @@ export const PROJECT_TASKS_MD: TaskList[] = [
                 description:
                     "Crear un Readme exhaustivo y detallado que incluya instrucciones para developers, información sobre la estructura del proyecto, convenciones de código y pautas para futuras integraciones.",
                 attachments: [mockAttachments[3]],
-                className: "bg-blue-100",
             },
         ],
     },

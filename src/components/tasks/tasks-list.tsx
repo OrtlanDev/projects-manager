@@ -14,6 +14,7 @@ import { ArrowDown, ArrowUp, ChevronDown, CirclePlus, MoreHorizontal, Paperclip 
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -25,8 +26,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PROJECT_TASKS_MD } from "@/mock/KanbanMockData";
+import { TaskForm } from "./task-form";
 
-// Define TPriority y ajusta Task
 export type TPriority = "LOW" | "MEDIUM" | "HIGH";
 
 export type Task = {
@@ -38,7 +39,7 @@ export type Task = {
     attachments: number;
 };
 
-export function ProjectTasksTable() {
+export function TaskList() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -194,8 +195,6 @@ export function ProjectTasksTable() {
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* En vez de pasar className directamente al componente que no lo acepta,
-                    lo envolvemos en un contenedor */}
                 <div className="ml-auto">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -221,10 +220,17 @@ export function ProjectTasksTable() {
                     </DropdownMenu>
                 </div>
 
-                <Button>
-                    <CirclePlus />
-                    Add Task
-                </Button>
+                <Dialog>
+                    <DialogTrigger>
+                        <Button>
+                            <CirclePlus />
+                            Add Task
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <TaskForm projectId="1" />
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <div className="rounded-md border">

@@ -8,6 +8,11 @@ import { XCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+async function getAlgo() {
+    const req = await fetch("https://pid-todo-backend.onrender.com/api/auth/register");
+    return await req.json();
+}
+
 export function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -25,6 +30,12 @@ export function LoginPage() {
             setError("Incorrect username or password");
         }
     };
+
+    useEffect(() => {
+        getAlgo()
+            .then((data) => console.log(data))
+            .catch((e) => console.log(e));
+    }, []);
 
     useEffect(() => {
         if (error && usernameRef.current) {

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
+// 🧩 Validación con Zod para el formulario
 const projectFormSchema = z.object({
     name: z.string().min(2, {
         message: "Project name must be at least 2 characters.",
@@ -22,16 +23,69 @@ const projectFormSchema = z.object({
         message: "Description must be at least 10 characters.",
     }),
     status: z.enum(["planning", "active", "completed", "stopped"]),
-    dueDate: z.date({
-        required_error: "A due date is required.",
-    }),
+    dueDate: z
+        .date({
+            required_error: "A due date is required.",
+            invalid_type_error: "Invalid date.",
+        })
+        .nullable(),
 });
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
 
+/**
+ * Componente independiente para la selección de fecha.
+ *
+ * Se sincroniza su estado local con el valor recibido del formulario y
+ * actualiza el cambio mediante la prop `onChange`, respetando las reglas de React Hooks.
+ */
+type DueDatePickerProps = {
+    initialDate: Date | null;
+    onChange: (date: Date | null) => void;
+};
+
+function DueDatePicker({ initialDate, onChange }: DueDatePickerProps) {
+    const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
+
+    // Actualiza el estado local si el valor inicial cambia desde el formulario
+    useEffect(() => {
+        setSelectedDate(initialDate);
+    }, [initialDate]);
+
+    const handleDateSelect = (date: Date | null) => {
+        setSelectedDate(date);
+        onChange(date);
+    };
+
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <FormControl>
+                    <Button
+                        variant="outline"
+                        className={cn("w-full pl-3 text-left font-normal", !selectedDate && "text-muted-foreground")}
+                    >
+                        {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                </FormControl>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                    mode="single"
+                    selected={selectedDate || undefined}
+                    onSelect={() => handleDateSelect}
+                    initialFocus
+                />
+            </PopoverContent>
+        </Popover>
+    );
+}
+
 export function ProjectForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Valores por defecto del formulario
     const defaultValues: Partial<ProjectFormValues> = {
         name: "",
         description: "",
@@ -39,6 +93,7 @@ export function ProjectForm() {
         dueDate: new Date(),
     };
 
+    // Configuración de react-hook-form con Zod
     const form = useForm<ProjectFormValues>({
         resolver: zodResolver(projectFormSchema),
         defaultValues,
@@ -47,7 +102,7 @@ export function ProjectForm() {
     async function onSubmit(data: ProjectFormValues) {
         setIsSubmitting(true);
 
-        // Simulate API call
+        // Simula una llamada a una API
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         console.log(data);
@@ -57,7 +112,9 @@ export function ProjectForm() {
     return (
         <Form {...form}>
             <h2 className="text-2xl text-center mb-2 font-medium">Create New Project</h2>
+
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {/* Project Name */}
                 <FormField
                     control={form.control}
                     name="name"
@@ -72,6 +129,7 @@ export function ProjectForm() {
                     )}
                 />
 
+                {/* Description */}
                 <FormField
                     control={form.control}
                     name="description"
@@ -91,6 +149,7 @@ export function ProjectForm() {
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Status */}
                     <FormField
                         control={form.control}
                         name="status"
@@ -115,44 +174,23 @@ export function ProjectForm() {
                         )}
                     />
 
+                    {/* Due Date */}
                     <FormField
                         control={form.control}
                         name="dueDate"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
                                 <FormLabel>Due Date</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-full pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                            >
-                                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <DueDatePicker initialDate={field.value} onChange={field.onChange} />
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                 </div>
 
+                {/* Botón Submit */}
                 <div className="flex justify-end gap-3">
-                    <Button type="submit" disabled={isSubmitting} size={"lg"} className="w-full">
+                    <Button type="submit" disabled={isSubmitting} size="lg" className="w-full">
                         {isSubmitting ? "Creating..." : "Create Project"}
                     </Button>
                 </div>

@@ -1,6 +1,12 @@
-import { Folders, LayoutGrid, ListTodo, LogOut, UserRoundCog } from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
     Sidebar,
     SidebarContent,
@@ -13,33 +19,25 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { useAuth } from "@/hooks/use-auth";
-import { useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { Folders, LayoutGrid, ListTodo, LogOut, UserRoundCog } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const items = [
     {
         title: "Dashboard",
-        url: "#",
+        url: "/dashboard/analytics", // Actualizar URL según corresponda
         icon: LayoutGrid,
     },
     {
         title: "Projects",
-        url: "#",
+        url: "/dashboard/projects",
         icon: Folders,
     },
     {
         title: "Tasks",
-        url: "#",
+        url: "/dashboard/tasks", // Actualizar URL según corresponda
         icon: ListTodo,
     },
 ];
@@ -91,12 +89,16 @@ const User = () => {
         </UserActionMenu>
     );
 };
+
 function AppSidebar() {
+    const location = useLocation();
+    const currentPath = location.pathname;
+
     return (
         <Sidebar>
             <SidebarHeader className="border-b border-sidebar-border h-15 flex justify-center pl-4">
                 <div className="flex gap-2">
-                    <img src="/src/assets/logo.svg" className="w-5" />
+                    <img src="/src/assets/logo.svg" className="w-5" alt="Logo" />
                     <span className="font-black tracking-wider uppercase">Synchrony</span>
                 </div>
             </SidebarHeader>
@@ -104,16 +106,26 @@ function AppSidebar() {
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            {items.map((item) => {
+                                // Comprobamos si la ruta actual coincide con la URL del item
+                                const isActive = currentPath === item.url;
+                                return (
+                                    <SidebarMenuItem
+                                        key={item.title}
+                                        className={cn(
+                                            "text-muted-foreground",
+                                            isActive && "bg-sidebar-border/50 text-foreground rounded-lg"
+                                        )}
+                                    >
+                                        <SidebarMenuButton asChild>
+                                            <a href={item.url} className="flex items-center gap-2">
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </a>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                );
+                            })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>

@@ -4,8 +4,10 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth-context";
 import AuthLayout from "@/layout/auth-layout";
 import MainLayout from "@/layout/main-layout";
+import VerifiedEmailPage from "@/pages/auth-email-verified";
 import { LoginPage } from "@/pages/auth-login-page";
 import SignupPage from "@/pages/auth-signup-page";
+import VerifyEmailPage from "@/pages/auth-verify-email";
 import NotFoundPage from "@/pages/not-found-page";
 import TaskPage from "@/pages/project-details-page";
 import ProjectsPage from "@/pages/projects-page";
@@ -38,6 +40,8 @@ function RoutesMap() {
                         >
                             <Route index path="login" element={<LoginPage />} />
                             <Route path="signup" element={<SignupPage />} />
+                            <Route path="verify-email" element={<VerifyEmailPage />} />
+                            <Route path="verify-email/:token" element={<VerifiedEmailPage />} />
                         </Route>
 
                         {/* Dashboard */}
@@ -51,7 +55,7 @@ function RoutesMap() {
                         >
                             <Route index element={<Navigate to="projects" replace />} />
                             <Route index path="projects" element={<ProjectsPage />} />
-                            <Route index path="projects/1" element={<TaskPage />} />
+                            <Route index path="projects/:projectId" element={<TaskPage />} />
                         </Route>
                         {/* 404 Not Found */}
                         <Route path="*" element={<NotFoundPage />} />

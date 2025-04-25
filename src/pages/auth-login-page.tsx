@@ -1,3 +1,4 @@
+// LoginPage.tsx
 import PasswordRecovery from "@/components/auth/password-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,11 +9,6 @@ import { XCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-async function getAlgo() {
-    const req = await fetch("https://pid-todo-backend.onrender.com/api/auth/register");
-    return await req.json();
-}
-
 export function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -21,21 +17,17 @@ export function LoginPage() {
     const navigate = useNavigate();
     const usernameRef = useRef<HTMLInputElement>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const success = login(username, password);
+        const success = await login(username, password);
+        console.log(success);
+
         if (success) {
             navigate("/dashboard/projects");
         } else {
             setError("Incorrect username or password");
         }
     };
-
-    useEffect(() => {
-        getAlgo()
-            .then((data) => console.log(data))
-            .catch((e) => console.log(e));
-    }, []);
 
     useEffect(() => {
         if (error && usernameRef.current) {

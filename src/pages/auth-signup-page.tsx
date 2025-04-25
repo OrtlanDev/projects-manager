@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function SignupPage() {
-    const [name, setName] = useState("");
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -15,13 +15,13 @@ function SignupPage() {
     const navigate = useNavigate();
     const nameRef = useRef<HTMLInputElement>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
-        const success = register(name, email, password);
+        const success = await register(username, email, password);
         if (success) {
-            navigate("/dashboard/projects");
+            navigate("/auth/verify-email");
         } else {
             setError("Registration failed. Please check your information and try again.");
         }
@@ -38,7 +38,7 @@ function SignupPage() {
         setter(e.target.value);
     };
 
-    const inputErrorClass = error ? "border-red-500" : "";
+    const inputErrorClass = error ? "border-red-300" : "";
 
     return (
         <form onSubmit={handleSubmit} className="w-full max-w-100 p-4 md:w-100">
@@ -63,8 +63,8 @@ function SignupPage() {
                                 id="name"
                                 type="text"
                                 placeholder="Enter your username"
-                                value={name}
-                                onChange={handleInputChange(setName)}
+                                value={username}
+                                onChange={handleInputChange(setUsername)}
                                 required
                                 className={`${inputErrorClass} pr-10`}
                             />

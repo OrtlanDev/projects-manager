@@ -174,9 +174,7 @@ export function TaskForm({ projectId }: TaskFormProps) {
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <div>Calendario</div>
-                                    </PopoverContent>
+                                    <PopoverContent className="w-auto p-0" align="start"></PopoverContent>
                                 </Popover>
                                 <FormMessage />
                             </FormItem>

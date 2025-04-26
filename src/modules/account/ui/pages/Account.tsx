@@ -1,3 +1,9 @@
+import DayPicker from "@/modules/core/ui/components/DayPicker";
+
 export default function AccountPage() {
-    return <div>AccountPage</div>;
+    return (
+        <div>
+            <DayPicker />
+        </div>
+    );
 }

@@ -23,12 +23,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const projectFormSchema = z.object({
-    name: z.string().min(2, {
-        message: "Project name must be at least 2 characters.",
+    name: z.string().min(1, {
+        message: "Project name must be at least 1 characters.",
     }),
-    description: z.string().min(10, {
-        message: "Description must be at least 10 characters.",
-    }),
+    description: z.string(),
     status: z.enum(["planning", "active", "completed", "stopped"]),
     dueDate: z
         .date({

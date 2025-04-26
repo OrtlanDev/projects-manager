@@ -33,7 +33,7 @@ import {
     TableRow,
 } from "@/modules/core/ui/components/shadcn/table";
 import { PROJECT_TASKS_MD } from "@/modules/projects/ui/mock/KanbanMockData";
-import { TaskForm } from "./task-form";
+import { TaskForm } from "./TaskForm";
 
 export type TPriority = "LOW" | "MEDIUM" | "HIGH";
 
@@ -75,7 +75,6 @@ export function TaskList() {
         }
     };
 
-    // Agregamos accessorFn en cada columna para cumplir con la definición interna
     const columns = React.useMemo<ColumnDef<Task>[]>(
         () => [
             {
@@ -185,6 +184,7 @@ export function TaskList() {
                             const isActive = currentSort && currentSort.id === option.id;
                             return (
                                 <DropdownMenuItem
+                                    asChild
                                     key={option.id}
                                     onClick={() => handleToggleSort(option.id)}
                                     className="flex justify-between items-center"

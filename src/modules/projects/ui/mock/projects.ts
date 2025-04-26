@@ -1,4 +1,4 @@
-import { ProjectCardProps } from "@/modules/projects/ui/components/project-card";
+import { ProjectCardProps } from "@/modules/projects/ui/components/ProjectCard";
 
 const projects: ProjectCardProps[] = [
     {

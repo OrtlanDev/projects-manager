@@ -6,14 +6,14 @@ import {
 } from "@/modules/core/ui/components/shadcn/dropdown-menu";
 import { Star } from "lucide-react";
 import { ReactNode } from "react";
-interface ActionMenuProps {
+interface OptionsMenuProps {
     children: ReactNode;
     onEdit?: () => void;
     onDelete?: () => void;
     onFavorite?: () => void;
 }
 
-function ActionMenu({ children, onEdit, onDelete, onFavorite }: ActionMenuProps) {
+function OptionsMenu({ children, onEdit, onDelete, onFavorite }: OptionsMenuProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
@@ -53,4 +53,4 @@ function ActionMenu({ children, onEdit, onDelete, onFavorite }: ActionMenuProps)
     );
 }
 
-export default ActionMenu;
+export default OptionsMenu;

@@ -1,13 +1,13 @@
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/modules/core/ui/components/shadcn/card";
 
-import StatusBadge, { Status } from "@/modules/projects/ui/components/project-status";
+import StatusBadge, { Status } from "@/modules/projects/ui/components/ProjectStatus";
 
 import { Separator } from "@radix-ui/react-separator";
 import { MoreVertical } from "lucide-react";
 import { Link } from "react-router-dom";
 import RadialChart from "../../../core/ui/components/RadialChart";
-import ActionMenu from "./action-menu";
+import OptionsMenu from "./OptionsMenu";
 
 // ─── PROJECT CARD ─────────────────────────────────────────────────
 
@@ -52,11 +52,11 @@ const ProjectCard = ({
                                     <StatusBadge status={status} />
                                 </div>
                                 <div className="flex gap-2">
-                                    <ActionMenu onEdit={onEdit} onDelete={onDelete} onFavorite={onFavorite}>
+                                    <OptionsMenu onEdit={onEdit} onDelete={onDelete} onFavorite={onFavorite}>
                                         <Button variant="ghost" size="icon">
                                             <MoreVertical />
                                         </Button>
-                                    </ActionMenu>
+                                    </OptionsMenu>
                                 </div>
                             </div>
                             <CardDescription className="line-clamp-3">{description}</CardDescription>

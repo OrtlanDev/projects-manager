@@ -1,6 +1,4 @@
-import { cn } from "@/modules/core/lib/utils";
 import { Button } from "@/modules/core/ui/components/shadcn/button";
-import { Calendar } from "@/modules/core/ui/components/shadcn/calendar";
 import {
     Form,
     FormControl,
@@ -10,7 +8,6 @@ import {
     FormMessage,
 } from "@/modules/core/ui/components/shadcn/form";
 import { Input } from "@/modules/core/ui/components/shadcn/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/modules/core/ui/components/shadcn/popover";
 import {
     Select,
     SelectContent,
@@ -20,10 +17,8 @@ import {
 } from "@/modules/core/ui/components/shadcn/select";
 import { Textarea } from "@/modules/core/ui/components/shadcn/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { DayPickerProvider } from "react-day-picker";
+import { useState } from "react";
+
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -45,54 +40,9 @@ const projectFormSchema = z.object({
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
 
-type DueDatePickerProps = {
-    initialDate: Date | null;
-    onChange: (date: Date | null) => void;
-};
-
-function DueDatePicker({ initialDate, onChange }: DueDatePickerProps) {
-    const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
-
-    useEffect(() => {
-        setSelectedDate(initialDate);
-    }, [initialDate]);
-
-    const handleDateSelect = (date: Date | null) => {
-        setSelectedDate(date);
-        onChange(date);
-    };
-
-    return (
-        <Popover>
-            <PopoverTrigger asChild>
-                <FormControl>
-                    <Button
-                        variant="outline"
-                        className={cn("w-full pl-3 text-left font-normal", !selectedDate && "text-muted-foreground")}
-                    >
-                        {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-                <DayPickerProvider initialProps={{}}>
-                    <Calendar
-                        mode="single"
-                        selected={selectedDate || undefined}
-                        onSelect={() => handleDateSelect}
-                        initialFocus
-                    />
-                </DayPickerProvider>
-            </PopoverContent>
-        </Popover>
-    );
-}
-
 export function ProjectForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Valores por defecto del formulario
     const defaultValues: Partial<ProjectFormValues> = {
         name: "",
         description: "",
@@ -100,7 +50,6 @@ export function ProjectForm() {
         dueDate: new Date(),
     };
 
-    // Configuración de react-hook-form con Zod
     const form = useForm<ProjectFormValues>({
         resolver: zodResolver(projectFormSchema),
         defaultValues,
@@ -109,7 +58,6 @@ export function ProjectForm() {
     async function onSubmit(data: ProjectFormValues) {
         setIsSubmitting(true);
 
-        // Simula una llamada a una API
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         console.log(data);
@@ -185,10 +133,9 @@ export function ProjectForm() {
                     <FormField
                         control={form.control}
                         name="dueDate"
-                        render={({ field }) => (
+                        render={() => (
                             <FormItem className="flex flex-col">
                                 <FormLabel>Due Date</FormLabel>
-                                <DueDatePicker initialDate={field.value} onChange={field.onChange} />
                                 <FormMessage />
                             </FormItem>
                         )}

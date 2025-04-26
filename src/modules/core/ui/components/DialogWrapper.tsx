@@ -1,4 +1,5 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/modules/core/ui/components/shadcn/dialog";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 
 interface DialogWrapperProps {
     trigger: React.ReactNode;
@@ -8,7 +9,11 @@ interface DialogWrapperProps {
 const DialogWrapper = ({ trigger, content }: DialogWrapperProps) => (
     <Dialog>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
-        <DialogContent>{content}</DialogContent>
+        <DialogContent>
+            <DialogTitle></DialogTitle>
+            <DialogDescription></DialogDescription>
+            {content}
+        </DialogContent>
     </Dialog>
 );
 

@@ -5,22 +5,25 @@ import { useEffect, useState } from "react";
 export function useVerifyEmail(token: string | undefined) {
     const [isVerified, setIsVerified] = useState<boolean | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [response, setResponse] = useState<unknown>(null); //
 
     useEffect(() => {
         if (token) {
             axios
                 .get(`${API_URL}/auth/verify-email/${token}`)
-                .then((response) => setIsVerified(response.status === 200))
-                .then((response) => console.log(response))
+                .then((response) => {
+                    setResponse(response.data);
+                    setIsVerified(response.status === 200);
+                })
                 .catch((err) => {
                     setError("There was an error verifying your email. Please try again.");
-                    console.error("Error verifying email:", err);
                     setIsVerified(false);
+                    console.error("Error verifying email:", err);
                 });
         } else {
             setIsVerified(false);
         }
     }, [token]);
 
-    return { isVerified, error };
+    return { isVerified, response, error };
 }

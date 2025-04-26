@@ -2,7 +2,8 @@ import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/modules/core/ui/components/shadcn/dialog";
 import { SidebarProvider, SidebarTrigger } from "@/modules/core/ui/components/shadcn/sidebar";
 import Sidebar from "@/modules/navigation/ui/components/Sidebar";
-import { ProjectForm } from "@/modules/projects/ui/components/project-form";
+import { ProjectForm } from "@/modules/projects/ui/components/ProjectForm";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import { Outlet } from "react-router-dom";
 
 export default function MainLayout() {
@@ -25,6 +26,8 @@ function Header() {
             <SidebarTrigger className="md:hidden" />
             <div></div>
             <Dialog>
+                <DialogTitle></DialogTitle>
+                <DialogDescription></DialogDescription>
                 <DialogTrigger asChild>
                     <Button>New Project</Button>
                 </DialogTrigger>

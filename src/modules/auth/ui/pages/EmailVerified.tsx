@@ -10,15 +10,24 @@ export default function VerifiedEmailPage() {
     const { token } = useParams<{ token: string }>();
 
     const [user, setUser] = useState<User | null>(null);
-    const { isVerified, error } = useVerifyEmail(token);
+    const { isVerified, error, response } = useVerifyEmail(token);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isVerified === false) {
-            navigate("/auth/login");
-        }
-    }, [isVerified, navigate]);
+        // if (!isVerified) {
+        //     console.log("User not verified", error);
+        //     navigate("/auth/login");
+        // }
+
+        // ! delete
+        console.log(response);
+        // try {
+        //     setUser(JSON.parse("{ORLANDO}"));
+        // } catch (error) {
+        //     console.error("Error parsing user data:", error);
+        // }
+    }, [isVerified, navigate, error, response]);
 
     const handleGoToDashboard = () => {
         navigate("/dashboard");

@@ -9,7 +9,6 @@ import { z } from "zod";
 
 import { cn } from "@/modules/core/lib/utils";
 import { Button } from "@/modules/core/ui/components/shadcn/button";
-import { Calendar } from "@/modules/core/ui/components/shadcn/calendar";
 import {
     Form,
     FormControl,
@@ -176,12 +175,7 @@ export function TaskForm({ projectId }: TaskFormProps) {
                                         </FormControl>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            initialFocus
-                                        />
+                                        <div>Calendario</div>
                                     </PopoverContent>
                                 </Popover>
                                 <FormMessage />

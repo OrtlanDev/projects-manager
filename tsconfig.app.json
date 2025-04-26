@@ -25,7 +25,8 @@
         /* ShadCn */
         "baseUrl": ".",
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "@core-components/*": ["src/modules/core/ui/components/shadcn/*"]
         }
     },
     "include": ["src"]

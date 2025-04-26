@@ -1,3 +1,4 @@
+import { API_URL } from "@/modules/core/api/apiConfig";
 import axios, { AxiosResponse } from "axios";
 import { createContext, useState } from "react";
 
@@ -9,6 +10,9 @@ export interface AuthContextType {
     isAuthenticated: boolean;
     user: User | null;
     login: (username: string, password: string) => Promise<boolean>;
+
+    tokenLogin: (username: string, response: AxiosResponse) => boolean;
+
     logout: () => void;
     register: (username: string, email: string, password: string) => Promise<boolean>;
 }
@@ -27,7 +31,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return username ? { username } : null;
     });
 
-    const API_URL = "https://pid-todo-backend.onrender.com/api";
+    const tokenLogin = (username: string, response: AxiosResponse): boolean => {
+        if (isValidUser(response)) {
+            updateUserStatus(username, response);
+            return true;
+        }
+        return false;
+    };
 
     const login = async (username: string, password: string): Promise<boolean> => {
         try {
@@ -90,11 +100,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         storage.removeItem("isAuthenticated");
         storage.removeItem("authenticatedUser");
+        storage.removeItem("refreshToken");
         storage.removeItem("token");
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, login, tokenLogin, logout, register }}>
             {children}
         </AuthContext.Provider>
     );

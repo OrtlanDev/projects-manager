@@ -1,10 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import { cn } from "@/modules/core/lib/utils";
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Calendar } from "@/modules/core/ui/components/shadcn/calendar";
@@ -26,8 +19,14 @@ import {
     SelectValue,
 } from "@/modules/core/ui/components/shadcn/select";
 import { Textarea } from "@/modules/core/ui/components/shadcn/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { DayPickerProvider } from "react-day-picker";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-// 🧩 Validación con Zod para el formulario
 const projectFormSchema = z.object({
     name: z.string().min(2, {
         message: "Project name must be at least 2 characters.",
@@ -46,12 +45,6 @@ const projectFormSchema = z.object({
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
 
-/**
- * Componente independiente para la selección de fecha.
- *
- * Se sincroniza su estado local con el valor recibido del formulario y
- * actualiza el cambio mediante la prop `onChange`, respetando las reglas de React Hooks.
- */
 type DueDatePickerProps = {
     initialDate: Date | null;
     onChange: (date: Date | null) => void;
@@ -60,7 +53,6 @@ type DueDatePickerProps = {
 function DueDatePicker({ initialDate, onChange }: DueDatePickerProps) {
     const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
 
-    // Actualiza el estado local si el valor inicial cambia desde el formulario
     useEffect(() => {
         setSelectedDate(initialDate);
     }, [initialDate]);
@@ -84,12 +76,14 @@ function DueDatePicker({ initialDate, onChange }: DueDatePickerProps) {
                 </FormControl>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                    mode="single"
-                    selected={selectedDate || undefined}
-                    onSelect={() => handleDateSelect}
-                    initialFocus
-                />
+                <DayPickerProvider initialProps={{}}>
+                    <Calendar
+                        mode="single"
+                        selected={selectedDate || undefined}
+                        onSelect={() => handleDateSelect}
+                        initialFocus
+                    />
+                </DayPickerProvider>
             </PopoverContent>
         </Popover>
     );

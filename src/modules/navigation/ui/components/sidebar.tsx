@@ -1,14 +1,4 @@
-import { useAuth } from "@/modules/auth/hooks/use-auth";
 import { cn } from "@/modules/core/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/modules/core/ui/components/shadcn/avatar";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/modules/core/ui/components/shadcn/dropdown-menu";
 import {
     Sidebar,
     SidebarContent,
@@ -21,14 +11,16 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/modules/core/ui/components/shadcn/sidebar";
-import { Folders, LayoutGrid, LogOut, UserRoundCog } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import projects_md from "@/modules/projects/ui/mock/projectList";
+import { ChartPie, Folders } from "lucide-react";
+import { Link, useLocation } from "react-router-dom"; // Importa Link desde react-router-dom
+import UserAccount from "./UserAccount";
 
-const items = [
+const menuItems = [
     {
-        title: "Dashboard",
+        title: "Analytics",
         url: "/dashboard/analytics",
-        icon: LayoutGrid,
+        icon: ChartPie,
     },
     {
         title: "Projects",
@@ -36,54 +28,6 @@ const items = [
         icon: Folders,
     },
 ];
-
-interface UserActionMenuProps {
-    children: React.ReactNode;
-    onLogout?: () => void;
-}
-
-const UserActionMenu = ({ children, onLogout }: UserActionMenuProps) => (
-    <DropdownMenu>
-        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[calc(18rem-16px)] md:w-[calc(16rem-16px)]">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-                <UserRoundCog />
-                Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onLogout}>
-                <LogOut className="text-destructive" />
-                <span className="text-destructive">Log out</span>
-            </DropdownMenuItem>
-        </DropdownMenuContent>
-    </DropdownMenu>
-);
-
-const User = () => {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        logout();
-        navigate("/auth/login");
-    };
-
-    return (
-        <UserActionMenu onLogout={handleLogout}>
-            <div className="flex items-center w-full gap-2 cursor-pointer">
-                <Avatar className="border border-sidebar-border">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback className="text-sm">OT</AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                    <p className="text-sm">{user?.username}</p>
-                    {/* <p className="text-muted-foreground text-xs">{user?.email}</p> */}
-                </div>
-            </div>
-        </UserActionMenu>
-    );
-};
 
 function AppSidebar() {
     const location = useLocation();
@@ -93,43 +37,85 @@ function AppSidebar() {
         <Sidebar>
             <SidebarHeader className="border-b border-sidebar-border h-15 flex justify-center pl-4">
                 <div className="flex gap-2">
-                    <img src="/src/assets/logo.svg" className="w-5" alt="Logo" />
+                    <img src="/src/assets/images/logo.svg" className="w-5" alt="Logo" />
                     <span className="font-black tracking-wider uppercase">Synchrony</span>
                 </div>
             </SidebarHeader>
+            {/* menu items */}
+            <SidebarGroup>
+                <SidebarGroupLabel>Menu</SidebarGroupLabel>
+                <SidebarGroupContent>
+                    <SidebarMenu>
+                        {menuItems.map((item) => {
+                            const isActive = currentPath === item.url;
+                            return (
+                                <SidebarMenuItem
+                                    key={item.title}
+                                    className={cn("rounded-md", isActive && "bg-sidebar-border/50")}
+                                >
+                                    <SidebarMenuButton asChild>
+                                        <Link
+                                            to={item.url}
+                                            className={cn(
+                                                "text-foreground",
+                                                isActive && "rounded-md bg-sidebar-border/50 hover:bg-sidebar-border/50"
+                                            )}
+                                        >
+                                            {" "}
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            );
+                        })}
+                    </SidebarMenu>
+                </SidebarGroupContent>
+            </SidebarGroup>
+
+            {/* project items */}
+            <SidebarGroupLabel className="-mb-2 ml-2">Projects</SidebarGroupLabel>
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {items.map((item) => {
-                                // Comprobamos si la ruta actual coincide con la URL del item
-                                const isActive = currentPath === item.url;
+                            {projects_md.map((item) => {
+                                const isActive = currentPath === `/dashboard/projects/${item.id}`;
                                 return (
-                                    <SidebarMenuItem
-                                        key={item.title}
-                                        className={cn(
-                                            "text-muted-foreground",
-                                            isActive && "bg-sidebar-border/50 text-foreground rounded-lg"
-                                        )}
-                                    >
+                                    <SidebarMenuItem key={item.id}>
                                         <SidebarMenuButton asChild>
-                                            <a href={item.url} className="flex items-center gap-2">
-                                                <item.icon />
-                                                <span>{item.title}</span>
-                                            </a>
+                                            <Link
+                                                to={`/dashboard/projects/${item.id}`}
+                                                className={cn(
+                                                    "rounded-md",
+                                                    isActive && "bg-sidebar-border/50 hover:bg-sidebar-border/50"
+                                                )}
+                                            >
+                                                {" "}
+                                                <span
+                                                    className={cn(
+                                                        "ml-5 before-point",
+                                                        isActive && "before:bg-blue-700!"
+                                                    )}
+                                                >
+                                                    {item.name}
+                                                </span>
+                                            </Link>
                                         </SidebarMenuButton>
+                                        {/* <SidebarMenuBadge className="text-red-700!">3</SidebarMenuBadge> */}
                                     </SidebarMenuItem>
                                 );
                             })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
+
                 <SidebarGroup>
                     <SidebarGroupLabel asChild></SidebarGroupLabel>
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter className="border-t border-sidebar-border h-15 flex-center">
-                <User />
+                <UserAccount />
             </SidebarFooter>
         </Sidebar>
     );

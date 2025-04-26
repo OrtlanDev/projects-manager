@@ -151,3 +151,7 @@
 .flex-between {
     @apply flex items-center justify-between;
 }
+
+.before-point {
+    @apply before:absolute before:top-3.5 before:left-3 before:w-1 before:h-1 before:content-[""] before:rounded-sm before:bg-ring/50;
+}

@@ -1,14 +1,14 @@
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/modules/core/ui/components/shadcn/dialog";
 import { SidebarProvider, SidebarTrigger } from "@/modules/core/ui/components/shadcn/sidebar";
-import AppSidebar from "@/modules/navigation/ui/components/sidebar";
+import Sidebar from "@/modules/navigation/ui/components/Sidebar";
 import { ProjectForm } from "@/modules/projects/ui/components/project-form";
 import { Outlet } from "react-router-dom";
 
 export default function MainLayout() {
     return (
         <SidebarProvider className="flex w-full">
-            <AppSidebar />
+            <Sidebar />
             <div className="flex flex-col w-full">
                 <Header />
                 <main className="w-full p-4 lg:p-6 mt-15">

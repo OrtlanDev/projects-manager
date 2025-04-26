@@ -1,50 +1,24 @@
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/modules/core/ui/components/shadcn/card";
-import axios from "axios";
 import { Home, MailCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useVerifyEmail } from "../../hooks/use-verify-email";
+import { User } from "../../types/user";
 
 export default function VerifiedEmailPage() {
-    type User = {
-        username: string;
-        email: string;
-    };
-
-    const [user, setUser] = useState<User | null>(null);
-
-    const navigate = useNavigate();
     const { token } = useParams<{ token: string }>();
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem("notVerifiedUser");
+    const [user, setUser] = useState<User | null>(null);
+    const { isVerified, error } = useVerifyEmail(token);
 
-        if (!storedUser) {
-            navigate("/auth/signup");
-            return;
-        }
-
-        try {
-            setUser(JSON.parse(storedUser));
-        } catch (error) {
-            console.error("Error parsing user data:", error);
-        }
-    }, [navigate]);
-
-    const API_URL = "https://pid-todo-backend.onrender.com/api";
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (token) {
-            axios
-                .get(`${API_URL}/auth/verify-email/${token}`)
-                .then((response) => {
-                    console.log("Response:", response.data);
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
+        if (isVerified === false) {
+            navigate("/auth/login");
         }
-    }, [token]);
+    }, [isVerified, navigate]);
 
     const handleGoToDashboard = () => {
         navigate("/dashboard");

@@ -1,3 +1,5 @@
+import AccountPage from "@/modules/account/ui/pages/Account";
+import AnalyticsPage from "@/modules/analytics/ui/pages/Analytics";
 import { AuthProvider } from "@/modules/auth/context/auth-context";
 import { PrivateRoute } from "@/modules/auth/ui/components/private-route";
 import { PublicRoute } from "@/modules/auth/ui/components/public-route";
@@ -55,6 +57,8 @@ function RoutesMap() {
                         >
                             <Route index element={<Navigate to="projects" replace />} />
                             <Route index path="projects" element={<ProjectsPage />} />
+                            <Route index path="analytics" element={<AnalyticsPage />} />
+                            <Route index path="account" element={<AccountPage />} />
                             <Route index path="projects/:projectId" element={<TaskPage />} />
                         </Route>
                         {/* 404 Not Found */}

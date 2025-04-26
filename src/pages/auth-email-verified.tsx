@@ -6,7 +6,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function VerifiedEmailPage() {
-    const [user, setUser] = useState(null);
+    type User = {
+        username: string;
+        email: string;
+    };
+
+    const [user, setUser] = useState<User | null>(null);
+
     const navigate = useNavigate();
     const { token } = useParams<{ token: string }>();
 

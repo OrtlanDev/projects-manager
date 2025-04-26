@@ -5,7 +5,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function VerifyEmailPage() {
-    const [user, setUser] = useState(null);
+    type User = {
+        username: string;
+        email: string;
+    };
+
+    const [user, setUser] = useState<User | null>(null);
     const [resendDisabled, setResendDisabled] = useState(false);
     const [countdown, setCountdown] = useState(60);
     const navigate = useNavigate();

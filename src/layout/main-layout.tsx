@@ -25,7 +25,7 @@ function Header() {
             <SidebarTrigger className="md:hidden" />
             <div></div>
             <Dialog>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                     <Button>New Project</Button>
                 </DialogTrigger>
                 <DialogContent>

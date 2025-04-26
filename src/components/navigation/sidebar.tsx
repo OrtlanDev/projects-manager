@@ -21,24 +21,19 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-import { Folders, LayoutGrid, ListTodo, LogOut, UserRoundCog } from "lucide-react";
+import { Folders, LayoutGrid, LogOut, UserRoundCog } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const items = [
     {
         title: "Dashboard",
-        url: "/dashboard/analytics", // Actualizar URL según corresponda
+        url: "/dashboard/analytics",
         icon: LayoutGrid,
     },
     {
         title: "Projects",
         url: "/dashboard/projects",
         icon: Folders,
-    },
-    {
-        title: "Tasks",
-        url: "/dashboard/tasks", // Actualizar URL según corresponda
-        icon: ListTodo,
     },
 ];
 
@@ -47,7 +42,7 @@ interface UserActionMenuProps {
     onLogout?: () => void;
 }
 
-export const UserActionMenu = ({ children, onLogout }: UserActionMenuProps) => (
+const UserActionMenu = ({ children, onLogout }: UserActionMenuProps) => (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent className="w-[calc(18rem-16px)] md:w-[calc(16rem-16px)]">
@@ -83,7 +78,7 @@ const User = () => {
                 </Avatar>
                 <div className="flex flex-col">
                     <p className="text-sm">{user?.username}</p>
-                    <p className="text-muted-foreground text-xs">{user?.email}</p>
+                    {/* <p className="text-muted-foreground text-xs">{user?.email}</p> */}
                 </div>
             </div>
         </UserActionMenu>

@@ -1,9 +1,8 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { createContext, useState } from "react";
 
 export interface User {
     username: string;
-    email: string;
 }
 
 export interface AuthContextType {
@@ -24,8 +23,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     const [user, setUser] = useState<User | null>(() => {
-        const storedUser = storage.getItem("authenticatedUser");
-        return storedUser ? JSON.parse(storedUser) : null;
+        const username = storage.getItem("authenticatedUser");
+        return username ? { username } : null;
     });
 
     const API_URL = "https://pid-todo-backend.onrender.com/api";
@@ -33,28 +32,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const login = async (username: string, password: string): Promise<boolean> => {
         try {
             const response = await axios.post(`${API_URL}/auth/login/`, { username, password });
-            const token = response.data.access;
-            const refreshToken = response.data.refresh;
-            const userData = response.data.user;
-
-            console.log(response);
-
-            if (token) {
-                storage.setItem("token", token);
-                if (refreshToken) {
-                    storage.setItem("refreshToken", refreshToken);
-                }
-
-                setIsAuthenticated(true);
-                if (userData) {
-                    setUser(userData);
-                    storage.setItem("authenticatedUser", JSON.stringify(userData));
-                }
-
-                storage.setItem("isAuthenticated", "true");
+            if (isValidUser(response)) {
+                updateUserStatus(username, response);
                 return true;
             }
-
             return false;
         } catch (error: unknown) {
             console.error(
@@ -65,6 +46,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return false;
         }
     };
+
+    function isValidUser({ data }: AxiosResponse): boolean {
+        return Boolean(data?.access && data?.refresh);
+    }
+
+    function updateUserStatus(username: string, { data }: AxiosResponse): void {
+        const token = data.access;
+        const refreshToken = data.refresh;
+
+        setIsAuthenticated(true);
+        setUser({ username });
+
+        storage.setItem("token", token);
+        storage.setItem("refreshToken", refreshToken);
+        storage.setItem("authenticatedUser", username);
+        storage.setItem("isAuthenticated", "true");
+        storage.removeItem("notVerifiedUser");
+    }
 
     const register = async (username: string, email: string, password: string): Promise<boolean> => {
         try {

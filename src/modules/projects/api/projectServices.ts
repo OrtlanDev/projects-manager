@@ -3,8 +3,7 @@ import axios from "axios";
 
 export const createProject = async (projectData: any) => {
     const token = localStorage.getItem("token");
-    const user = localStorage.getItem("authenticatedUser");
-
+    console.log(projectData);
     try {
         const response = await axios.post(`${API_URL}/projects/projects/`, projectData, {
             headers: {

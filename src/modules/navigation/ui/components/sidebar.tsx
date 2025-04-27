@@ -13,27 +13,32 @@ import {
 } from "@/modules/core/ui/components/shadcn/sidebar";
 import { findProjects } from "@/modules/projects/api/projectServices";
 import { ChartPie, Folders } from "lucide-react";
-import { Link, useLocation } from "react-router-dom"; // Importa Link desde react-router-dom
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import UserAccount from "./UserAccount";
 
 const menuItems = [
-    {
-        title: "Analytics",
-        url: "/dashboard/analytics",
-        icon: ChartPie,
-    },
-    {
-        title: "Projects",
-        url: "/dashboard/projects",
-        icon: Folders,
-    },
+    { title: "Analytics", url: "/dashboard/analytics", icon: ChartPie },
+    { title: "Projects", url: "/dashboard/projects", icon: Folders },
 ];
-
-const projectList = await findProjects();
 
 function AppSidebar() {
     const location = useLocation();
     const currentPath = location.pathname;
+
+    const [projectList, setProjectList] = useState<any[]>([]);
+
+    useEffect(() => {
+        async function loadProjects() {
+            try {
+                const projects = await findProjects();
+                setProjectList(projects);
+            } catch (error) {
+                console.error("Error al cargar proyectos:", error);
+            }
+        }
+        loadProjects();
+    }, []);
 
     return (
         <Sidebar>
@@ -43,7 +48,8 @@ function AppSidebar() {
                     <span className="font-black tracking-wider uppercase">Synchrony</span>
                 </div>
             </SidebarHeader>
-            {/* menu items */}
+
+            {/* Menu */}
             <SidebarGroup>
                 <SidebarGroupLabel>Menu</SidebarGroupLabel>
                 <SidebarGroupContent>
@@ -63,7 +69,6 @@ function AppSidebar() {
                                                 isActive && "rounded-md bg-sidebar-border/50 hover:bg-sidebar-border/50"
                                             )}
                                         >
-                                            {" "}
                                             <item.icon />
                                             <span>{item.title}</span>
                                         </Link>
@@ -75,7 +80,7 @@ function AppSidebar() {
                 </SidebarGroupContent>
             </SidebarGroup>
 
-            {/* project items */}
+            {/* Proyectos */}
             <SidebarGroupLabel className="-mb-2 ml-2">Projects</SidebarGroupLabel>
             <SidebarContent>
                 <SidebarGroup>
@@ -93,7 +98,6 @@ function AppSidebar() {
                                                     isActive && "bg-sidebar-border/50 hover:bg-sidebar-border/50"
                                                 )}
                                             >
-                                                {" "}
                                                 <span
                                                     className={cn(
                                                         "ml-5 before-point",
@@ -104,18 +108,14 @@ function AppSidebar() {
                                                 </span>
                                             </Link>
                                         </SidebarMenuButton>
-                                        {/* <SidebarMenuBadge className="text-red-700!">3</SidebarMenuBadge> */}
                                     </SidebarMenuItem>
                                 );
                             })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
-
-                <SidebarGroup>
-                    <SidebarGroupLabel asChild></SidebarGroupLabel>
-                </SidebarGroup>
             </SidebarContent>
+
             <SidebarFooter className="border-t border-sidebar-border h-15 flex-center">
                 <UserAccount />
             </SidebarFooter>

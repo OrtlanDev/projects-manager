@@ -1,15 +1,19 @@
 import { API_URL } from "@/modules/core/api/apiConfig";
 import axios from "axios";
-import { ProjectFormValues } from "../types/project-form";
 
-export async function createProject(data: ProjectFormValues) {
-    const payload = {
-        name: data.name,
-        description: data.description,
-        status: data.status,
-        dueDate: data.dueDate ? data.dueDate.toISOString() : null,
-    };
+export const createProject = async (projectData: any) => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("authenticatedUser");
 
-    const response = await axios.post(`${API_URL}/projects/projects`, payload);
-    return response.data;
-}
+    try {
+        const response = await axios.post(`${API_URL}/projects/projects/`, projectData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error creating project:", error);
+        throw error;
+    }
+};

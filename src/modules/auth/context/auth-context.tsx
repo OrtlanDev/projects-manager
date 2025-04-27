@@ -1,6 +1,8 @@
+import { getUserId } from "@/modules/account/api/load-user-data";
 import { API_URL } from "@/modules/core/api/apiConfig";
 import axios, { AxiosResponse } from "axios";
 import { createContext, useState } from "react";
+import { startAutoRefreshToken } from "../hooks/use-auto-refresh-token";
 
 export interface User {
     username: string;
@@ -32,6 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     const tokenLogin = (username: string, response: AxiosResponse): boolean => {
+        console.log(response);
         if (isValidUser(response)) {
             updateUserStatus(username, response);
             return true;
@@ -42,8 +45,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const login = async (username: string, password: string): Promise<boolean> => {
         try {
             const response = await axios.post(`${API_URL}/auth/login/`, { username, password });
+
             if (isValidUser(response)) {
                 updateUserStatus(username, response);
+                const id = await getUserId();
+                localStorage.setItem("id", id);
+                startAutoRefreshToken();
+
                 return true;
             }
             return false;
@@ -102,6 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         storage.removeItem("authenticatedUser");
         storage.removeItem("refreshToken");
         storage.removeItem("token");
+        storage.removeItem("id");
     };
 
     return (

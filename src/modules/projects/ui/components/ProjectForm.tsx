@@ -1,22 +1,4 @@
-import DayPicker from "@/modules/core/ui/components/DayPicker";
 import { Button } from "@/modules/core/ui/components/shadcn/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/modules/core/ui/components/shadcn/form";
-import { Input } from "@/modules/core/ui/components/shadcn/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/modules/core/ui/components/shadcn/select";
-import { Textarea } from "@/modules/core/ui/components/shadcn/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
@@ -26,19 +8,25 @@ import { createProject } from "../../api/projectServices";
 import { projectFormSchema } from "../../types/project-form";
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
-
 export function ProjectForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function onSubmit(data: ProjectFormValues) {
-        setIsSubmitting(true);
+        setIsSubmitting(true); // Inicia el estado de submitting
         try {
-            const project = await createProject(data);
+            // Llamamos a la función de la API
+            const project = await createProject({
+                name: data.name,
+                description: data.description,
+                status: data.status,
+            });
             console.log("Project created:", project);
+            // Aquí podrías redirigir o mostrar un mensaje de éxito
         } catch (error) {
             console.error("Failed to create project:", error);
+            // Aquí puedes mostrar un mensaje de error al usuario
         } finally {
-            setIsSubmitting(false);
+            setIsSubmitting(false); // Termina el estado de submitting
         }
     }
 
@@ -46,98 +34,57 @@ export function ProjectForm() {
         name: "",
         description: "",
         status: "planning",
-        dueDate: new Date(),
+        created_at: new Date(),
     };
 
     const form = useForm<ProjectFormValues>({
         resolver: zodResolver(projectFormSchema),
         defaultValues,
     });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<ProjectFormValues>({
+        resolver: zodResolver(projectFormSchema),
+    });
 
     return (
-        <Form {...form}>
-            <h2 className="text-2xl text-center mb-2 font-medium">Create New Project</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Project Name */}
+            <div>
+                <label>Project Name</label>
+                <input {...register("name")} placeholder="Enter project name" />
+                <p>{errors.name?.message}</p>
+            </div>
 
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {/* Project Name */}
-                <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Project Name</FormLabel>
-                            <FormControl>
-                                <Input autoFocus placeholder="Enter project name" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            {/* User */}
+            <div>
+                <label>User</label>
+                <input {...register("user")} placeholder="Enter user name" />
+                <p>{errors.user?.message}</p>
+            </div>
 
-                {/* Description */}
-                <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Description</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Enter project description"
-                                    className="min-h-[120px]"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            {/* Status */}
+            <div>
+                <label>Status</label>
+                <select {...register("status")}>
+                    <option value="planning">Planning</option>
+                    <option value="active">Active</option>
+                    <option value="stopped">Stopped</option>
+                    <option value="completed">Completed</option>
+                </select>
+                <p>{errors.status?.message}</p>
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Status */}
-                    <FormField
-                        control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Status</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl className="w-full">
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a status" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="planning">Planning</SelectItem>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="stopped">Stopped</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+            {/* Description */}
+            <div>
+                <label>Description</label>
+                <textarea {...register("description")} placeholder="Enter project description" />
+            </div>
 
-                    <FormField
-                        control={form.control}
-                        name="dueDate"
-                        render={() => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Due Date</FormLabel>
-                                <DayPicker />
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
-                {/* Botón Submit */}
-                <div className="flex justify-end gap-3">
-                    <Button type="submit" disabled={isSubmitting} size="lg" className="w-full">
-                        {isSubmitting ? "Creating..." : "Create Project"}
-                    </Button>
-                </div>
-            </form>
-        </Form>
+            {/* Submit Button */}
+            <Button type="submit">Submit</Button>
+        </form>
     );
 }

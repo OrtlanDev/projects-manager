@@ -11,7 +11,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/modules/core/ui/components/shadcn/sidebar";
-import projects_md from "@/modules/projects/ui/mock/projectList";
+import { findProjects } from "@/modules/projects/api/projectServices";
 import { ChartPie, Folders } from "lucide-react";
 import { Link, useLocation } from "react-router-dom"; // Importa Link desde react-router-dom
 import UserAccount from "./UserAccount";
@@ -28,6 +28,8 @@ const menuItems = [
         icon: Folders,
     },
 ];
+
+const projectList = await findProjects();
 
 function AppSidebar() {
     const location = useLocation();
@@ -79,7 +81,7 @@ function AppSidebar() {
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {projects_md.map((item) => {
+                            {projectList.map((item) => {
                                 const isActive = currentPath === `/dashboard/projects/${item.id}`;
                                 return (
                                     <SidebarMenuItem key={item.id}>

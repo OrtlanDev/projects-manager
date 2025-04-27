@@ -1,29 +1,29 @@
 import { API_URL } from "@/modules/core/api/apiConfig";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import VerifyEmailData from "../types/api";
 
 export function useVerifyEmail(token: string | undefined) {
-    const [isVerified, setIsVerified] = useState<boolean | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [response, setResponse] = useState<unknown>(null); //
+    const [response, setResponse] = useState<VerifyEmailData | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         if (token) {
+            setIsLoading(true);
             axios
-                .get(`${API_URL}/auth/verify-email/${token}`)
+                .get<{ data: VerifyEmailData }>(`${API_URL}/auth/verify-email/${token}/`)
                 .then((response) => {
-                    setResponse(response.data);
-                    setIsVerified(response.status === 200);
+                    setResponse(response.data.data);
+                    setIsLoading(false);
                 })
                 .catch((err) => {
                     setError("There was an error verifying your email. Please try again.");
-                    setIsVerified(false);
+                    setIsLoading(false);
                     console.error("Error verifying email:", err);
                 });
-        } else {
-            setIsVerified(false);
         }
     }, [token]);
 
-    return { isVerified, response, error };
+    return { response, error, isLoading };
 }

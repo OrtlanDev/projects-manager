@@ -1,3 +1,4 @@
+import { useAutoRefreshToken } from "@/modules/auth/hooks/use-auto-refresh-token";
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/modules/core/ui/components/shadcn/dialog";
 import { SidebarProvider, SidebarTrigger } from "@/modules/core/ui/components/shadcn/sidebar";
@@ -7,6 +8,8 @@ import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import { Outlet } from "react-router-dom";
 
 export default function MainLayout() {
+    useAutoRefreshToken();
+
     return (
         <SidebarProvider className="flex w-full">
             <Sidebar />

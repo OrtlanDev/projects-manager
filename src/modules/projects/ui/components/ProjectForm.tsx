@@ -1,3 +1,4 @@
+import DayPicker from "@/modules/core/ui/components/DayPicker";
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import {
     Form,
@@ -21,25 +22,25 @@ import { useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-const projectFormSchema = z.object({
-    name: z.string().min(1, {
-        message: "Project name must be at least 1 characters.",
-    }),
-    description: z.string(),
-    status: z.enum(["planning", "active", "completed", "stopped"]),
-    dueDate: z
-        .date({
-            required_error: "A due date is required.",
-            invalid_type_error: "Invalid date.",
-        })
-        .nullable(),
-});
+import { createProject } from "../../api/projectServices";
+import { projectFormSchema } from "../../types/project-form";
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
 
 export function ProjectForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    async function onSubmit(data: ProjectFormValues) {
+        setIsSubmitting(true);
+        try {
+            const project = await createProject(data);
+            console.log("Project created:", project);
+        } catch (error) {
+            console.error("Failed to create project:", error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
 
     const defaultValues: Partial<ProjectFormValues> = {
         name: "",
@@ -52,15 +53,6 @@ export function ProjectForm() {
         resolver: zodResolver(projectFormSchema),
         defaultValues,
     });
-
-    async function onSubmit(data: ProjectFormValues) {
-        setIsSubmitting(true);
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        console.log(data);
-        setIsSubmitting(false);
-    }
 
     return (
         <Form {...form}>
@@ -118,7 +110,6 @@ export function ProjectForm() {
                                     <SelectContent>
                                         <SelectItem value="planning">Planning</SelectItem>
                                         <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="completed">Completed</SelectItem>
                                         <SelectItem value="stopped">Stopped</SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -127,13 +118,13 @@ export function ProjectForm() {
                         )}
                     />
 
-                    {/* Due Date */}
                     <FormField
                         control={form.control}
                         name="dueDate"
                         render={() => (
                             <FormItem className="flex flex-col">
                                 <FormLabel>Due Date</FormLabel>
+                                <DayPicker />
                                 <FormMessage />
                             </FormItem>
                         )}

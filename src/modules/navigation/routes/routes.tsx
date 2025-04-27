@@ -12,7 +12,7 @@ import { SidebarProvider } from "@/modules/core/ui/components/shadcn/sidebar";
 import MainLayout from "@/modules/core/ui/layouts/Main";
 import NotFoundPage from "@/modules/core/ui/pages/NotFound";
 import TaskPage from "@/modules/projects/ui/pages/project-details-page";
-import ProjectsPage from "@/modules/projects/ui/pages/projects-page";
+import ProjectsPage from "@/modules/projects/ui/pages/ProjectsPage";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 function RoutesMap() {

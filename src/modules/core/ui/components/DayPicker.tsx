@@ -37,7 +37,7 @@ export default function DayPicker() {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[280px] justify-between text-left font-normal">
+                <Button variant="outline" className="justify-between text-left font-normal">
                     {date ? format(date, "PPP") : "Select a date"}
                     <CalendarDays />
                 </Button>

@@ -1,6 +1,6 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { Attachment } from "../../projects/interfaces/attachment";
-import { TPriority } from "../../projects/types/priority";
+import { Priority } from "../../projects/types/priority";
 
 export type TaskList = {
     id: UniqueIdentifier;
@@ -11,7 +11,7 @@ export type TaskList = {
 export type Task = {
     id: UniqueIdentifier;
     title: string;
-    priority: TPriority;
+    priority: Priority;
     description?: string;
     dueDate?: Date;
     attachments?: Attachment[];

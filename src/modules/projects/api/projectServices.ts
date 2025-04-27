@@ -25,7 +25,7 @@ export const deleteProject = async (projectId: string) => {
     return data;
 };
 
-export const setAsFavoriteProject = async (projectId: string, isFavorite: boolean) => {
-    const { data } = await axiosInstance.put(`/projects/projects/${projectId}/`, { isFavorite });
+export const setAsFavoriteProject = async (projectId: string, favorite: boolean) => {
+    const { data } = await axiosInstance.put(`/projects/projects/${projectId}/`, { favorite });
     return data;
 };

@@ -27,13 +27,20 @@ const handleToggleFavorite = async (projectId: string, currentFavoriteState: boo
         console.error("Error alternando el estado de favorito:", error);
     }
 };
-
 function OptionsMenu({ children, favorite, projectId, onEdit, onDelete }: OptionsMenuProps) {
     const [isFavorite, setIsFavorite] = useState(favorite);
 
     const handleFavoriteClick = async () => {
-        setIsFavorite(!isFavorite);
-        const newFavoriteState = await handleToggleFavorite(projectId, isFavorite);
+        // Se invierte el valor actual para enviar el estado nuevo.
+        const newFavoriteState = !isFavorite;
+        try {
+            const updatedFavorite = await handleToggleFavorite(projectId, newFavoriteState);
+            // Se actualiza el estado local con lo que retorne la API.
+            setIsFavorite(updatedFavorite);
+        } catch (error) {
+            // Podrías revertir el estado local o notificar el error.
+            console.error("Error al alternar el estado de favorito:", error);
+        }
     };
 
     return (
@@ -74,5 +81,4 @@ function OptionsMenu({ children, favorite, projectId, onEdit, onDelete }: Option
         </DropdownMenu>
     );
 }
-
 export default OptionsMenu;

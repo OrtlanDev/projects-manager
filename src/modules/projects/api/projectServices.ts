@@ -1,4 +1,4 @@
-import { axiosInstance } from "./axiosInstance";
+import { axiosInstance } from "../../core/api/axiosInstance";
 
 export const createProject = async (projectData: any) => {
     const { data } = await axiosInstance.post("/projects/projects/", projectData);

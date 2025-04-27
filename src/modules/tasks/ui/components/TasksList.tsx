@@ -10,14 +10,13 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ChevronDown, CirclePlus, MoreHorizontal, Paperclip } from "lucide-react";
+import { CirclePlus, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/modules/core/ui/components/shadcn/dialog";
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
@@ -32,90 +31,62 @@ import {
     TableHeader,
     TableRow,
 } from "@/modules/core/ui/components/shadcn/table";
-import { PROJECT_TASKS_MD } from "@/modules/projects/ui/mock/KanbanMockData";
+import { Tabs, TabsList, TabsTrigger } from "@/modules/core/ui/components/shadcn/tabs";
+import { taskList_md } from "@/modules/projects/ui/mock/taskList";
 import { TaskForm } from "./TaskForm";
 
 export type TPriority = "LOW" | "MEDIUM" | "HIGH";
 
 export type Task = {
+    id: number;
     column: string;
     title: string;
     priority: TPriority;
-    description: string | undefined;
-    dueDate: string;
-    attachments: number;
+    description: string | null;
 };
 
 export function TaskList() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+    const [selectedTab, setSelectedTab] = React.useState("toDo");
 
-    const data = React.useMemo(
-        () =>
-            PROJECT_TASKS_MD.flatMap((column) =>
-                column.items.map((item) => ({
-                    column: column.name,
-                    title: item.title,
-                    priority: item.priority,
-                    description: item.description,
-                    dueDate: item.dueDate ? new Date(item.dueDate).toLocaleDateString() : "No date",
-                    attachments: item.attachments?.length || 0,
-                }))
-            ),
-        []
-    );
-
-    const handleToggleSort = (id: string) => {
-        const currentSort = sorting[0];
-        if (currentSort && currentSort.id === id) {
-            setSorting([{ id, desc: !currentSort.desc }]);
-        } else {
-            setSorting([{ id, desc: false }]);
-        }
+    const columnNameMap: { [key: string]: string } = {
+        toDo: "To Do",
+        inProgress: "In Progress",
+        completed: "Completed",
     };
+
+    const data = React.useMemo(() => taskList_md, []);
+
+    const filteredData = React.useMemo(
+        () => data.filter((task) => task.column === columnNameMap[selectedTab]),
+        [data, selectedTab]
+    );
 
     const columns = React.useMemo<ColumnDef<Task>[]>(
         () => [
             {
-                accessorKey: "column",
-                accessorFn: (row: Task) => row.column,
-                header: "Column",
-                cell: ({ row }) => <div className="font-medium">{row.getValue("column")}</div>,
-            },
-            {
                 id: "details",
                 header: "Details",
                 cell: ({ row }) => {
-                    const { title, description, attachments } = row.original;
+                    const { title, description, priority } = row.original;
                     return (
                         <div className="flex items-center space-x-4">
                             <div className="p-2">
-                                <div className="font-semibold text-[16px] mb-1">{title}</div>
-                                <div className="text-sm text-muted-foreground">
-                                    <p className="w-140 text-wrap line-clamp-2">{description}</p>
+                                <div className="flex items-center gap-2 w-max mb-1">
+                                    <div className="font-semibold text-[16px]">{title}</div>
+                                    <div className="text-sm px-2 py-1 bg-gray-100 rounded-md">{priority}</div>
                                 </div>
-                                <div className="flex gap-2 mt-3">
-                                    <Button variant="secondary" size={"sm"}>
-                                        <Paperclip /> {attachments}
-                                    </Button>
-                                </div>
+                                {description && (
+                                    <div className="text-sm text-muted-foreground">
+                                        <p className="w-140 text-wrap line-clamp-2">{description}</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     );
                 },
-            },
-            {
-                accessorKey: "priority",
-                accessorFn: (row: Task) => row.priority,
-                header: "Priority",
-                cell: ({ row }) => <div className="capitalize">{row.getValue("priority")}</div>,
-            },
-            {
-                accessorKey: "dueDate",
-                accessorFn: (row: Task) => row.dueDate,
-                header: "Due Date",
-                cell: ({ row }) => <div>{row.getValue("dueDate")}</div>,
             },
             {
                 id: "actions",
@@ -147,7 +118,7 @@ export function TaskList() {
     );
 
     const table = useReactTable<Task>({
-        data,
+        data: filteredData,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -163,70 +134,16 @@ export function TaskList() {
         },
     });
 
-    const sortOptions = [
-        { id: "column", label: "Column" },
-        { id: "priority", label: "Priority" },
-        { id: "dueDate", label: "Due Date" },
-    ];
-
     return (
         <div className="w-full">
-            <div className="flex items-center justify-end w-full py-4 gap-2">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline">
-                            Sort <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {sortOptions.map((option) => {
-                            const currentSort = sorting[0];
-                            const isActive = currentSort && currentSort.id === option.id;
-                            return (
-                                <DropdownMenuItem
-                                    asChild
-                                    key={option.id}
-                                    onClick={() => handleToggleSort(option.id)}
-                                    className="flex justify-between items-center"
-                                >
-                                    <span>{option.label}</span>
-                                    {isActive &&
-                                        (currentSort.desc ? (
-                                            <ArrowDown className="h-4 w-4" />
-                                        ) : (
-                                            <ArrowUp className="h-4 w-4" />
-                                        ))}
-                                </DropdownMenuItem>
-                            );
-                        })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
-
-                <div className="ml-auto">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">
-                                Columns <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {table
-                                .getAllColumns()
-                                .filter((column) => column.getCanHide())
-                                .map((column) => (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-
+            <div className="flex-between mb-2 mt-6">
+                <Tabs value={selectedTab} onValueChange={setSelectedTab} defaultValue="toDo" className="w-[400px]">
+                    <TabsList className="grid w-full grid-cols-3">
+                        <TabsTrigger value="toDo">To Do</TabsTrigger>
+                        <TabsTrigger value="inProgress">In Progress</TabsTrigger>
+                        <TabsTrigger value="completed">Completed</TabsTrigger>
+                    </TabsList>
+                </Tabs>
                 <Dialog>
                     <DialogTrigger>
                         <Button>
@@ -268,7 +185,7 @@ export function TaskList() {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                    No tasks in this category.
                                 </TableCell>
                             </TableRow>
                         )}

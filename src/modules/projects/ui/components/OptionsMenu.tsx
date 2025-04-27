@@ -7,7 +7,7 @@ import {
 } from "@/modules/core/ui/components/shadcn/dropdown-menu";
 import { Star } from "lucide-react";
 import { ReactNode, useState } from "react";
-import { toggleFavoriteProject } from "../../api/projectServices";
+import { setAsFavoriteProject } from "../../api/projectServices";
 
 interface OptionsMenuProps {
     children: ReactNode;
@@ -20,7 +20,7 @@ interface OptionsMenuProps {
 
 const handleToggleFavorite = async (projectId: string, currentFavoriteState: boolean) => {
     try {
-        const updatedProject = await toggleFavoriteProject(projectId, currentFavoriteState);
+        const updatedProject = await setAsFavoriteProject(projectId, currentFavoriteState);
         console.log("Proyecto actualizado:", updatedProject);
         return updatedProject.favorite;
     } catch (error) {

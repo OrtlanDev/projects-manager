@@ -16,7 +16,7 @@ const getUserData = async (token: string) => {
 };
 
 const getUserId = async (): Promise<string> => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     if (token) {
         const userData = await getUserData(token);
         return userData.id;

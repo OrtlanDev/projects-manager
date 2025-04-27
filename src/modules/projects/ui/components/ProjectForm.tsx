@@ -26,7 +26,8 @@ export default function ProjectForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            end_date: new Date(),
+            name: "",
+            description: "",
             status: "planning",
         },
     });

@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true);
         setUser({ username });
 
-        storage.setItem("token", token);
+        storage.setItem("accessToken", token);
         storage.setItem("refreshToken", refreshToken);
         storage.setItem("authenticatedUser", username);
         storage.setItem("isAuthenticated", "true");

@@ -1,13 +1,6 @@
 // src/modules/projects/api/projectServices.ts
 
 import { axiosInstance } from "./axiosInstance";
-
-// export interface ProjectData {
-//     title: string;
-//     description: string;
-//     dueDate: string;
-//     status: "planing" | "active" | "stopped" | "completed";
-//   }
 export const createProject = async (projectData: any) => {
     try {
         const { data } = await axiosInstance.post("/projects/projects/", projectData);
@@ -54,5 +47,16 @@ export const deleteProject = async (projectId: string) => {
     } catch (error) {
         console.error(`Error eliminando proyecto ${projectId}:`, error);
         throw new Error("No se pudo eliminar el proyecto.");
+    }
+};
+
+export const toggleFavoriteProject = async (projectId: string, isFavorite: boolean) => {
+    try {
+        const projectData = { isFavorite };
+        const { data } = await axiosInstance.put(`/projects/projects/${projectId}/`, projectData);
+        return data;
+    } catch (error) {
+        console.error(`Error actualizando estado de favorito del proyecto ${projectId}:`, error);
+        throw new Error("No se pudo actualizar el estado de favorito del proyecto.");
     }
 };

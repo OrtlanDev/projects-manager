@@ -3,26 +3,21 @@ import { Card, CardContent, CardDescription, CardTitle } from "@/modules/core/ui
 
 import StatusBadge, { Status } from "@/modules/projects/ui/components/ProjectStatus";
 
-import { Separator } from "@radix-ui/react-separator";
 import { MoreVertical } from "lucide-react";
 import { Link } from "react-router-dom";
 import RadialChart from "../../../core/ui/components/RadialChart";
 import OptionsMenu from "./OptionsMenu";
-
-// ─── PROJECT CARD ─────────────────────────────────────────────────
 
 export interface ProjectCardProps {
     projectId: string;
     title: string;
     status: Status;
     description: string;
-    dueDate: string;
-    remainingDays: number;
     tasksCompleted: number;
+    favorite: boolean;
     tasksTotal: number;
     onEdit?: () => void;
     onDelete?: () => void;
-    onFavorite?: () => void;
 }
 
 const ProjectCard = ({
@@ -30,13 +25,11 @@ const ProjectCard = ({
     title,
     status,
     description,
-    dueDate,
-    remainingDays,
     tasksCompleted,
     tasksTotal,
+    favorite,
     onEdit,
     onDelete,
-    onFavorite,
 }: ProjectCardProps) => {
     const progressPercentage = (100 * tasksCompleted) / tasksTotal;
 
@@ -52,7 +45,12 @@ const ProjectCard = ({
                                     <StatusBadge status={status} />
                                 </div>
                                 <div className="flex gap-2">
-                                    <OptionsMenu onEdit={onEdit} onDelete={onDelete} onFavorite={onFavorite}>
+                                    <OptionsMenu
+                                        projectId={projectId}
+                                        favorite={favorite}
+                                        onEdit={onEdit}
+                                        onDelete={onDelete}
+                                    >
                                         <Button variant="ghost" size="icon">
                                             <MoreVertical />
                                         </Button>
@@ -63,16 +61,6 @@ const ProjectCard = ({
                         </div>
 
                         <div className="flex-center w-min mt-4">
-                            <div className="flex items-center gap-2">
-                                <div className="flex flex-col text-sm">
-                                    <span className="-mb-1">{dueDate}</span>
-                                    <p className="text-nowrap">
-                                        <span className="text-xs text-foreground">{remainingDays}</span>
-                                        <span className="text-xs text-muted-foreground"> days remaining</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <Separator className="w-0.25 h-6 bg-sidebar-border mx-4" />
                             <div className="flex items-center gap-2">
                                 <RadialChart percentage={progressPercentage} />
                                 <div className="flex flex-col">

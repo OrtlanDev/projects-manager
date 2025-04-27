@@ -2,7 +2,7 @@ import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/modules/core/ui/components/shadcn/dialog";
 import { SidebarProvider, SidebarTrigger } from "@/modules/core/ui/components/shadcn/sidebar";
 import Sidebar from "@/modules/navigation/ui/components/Sidebar";
-import ProjectForm from "@/modules/projects/ui/components/Form";
+import ProjectForm from "@/modules/projects/ui/components/ProjectForm";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import { Outlet } from "react-router-dom";
 

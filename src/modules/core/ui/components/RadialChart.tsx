@@ -7,15 +7,24 @@ interface RadialChartProps {
 }
 
 function RadialChart({ percentage, fillColor = "var(--color-safari)" }: RadialChartProps) {
+    // Validar que el porcentaje sea un número y esté en el rango de 0 a 100
+    const validPercentage = !isNaN(percentage) && percentage >= 0 && percentage <= 100 ? percentage : 0;
+
+    // Transformar el porcentaje a un ángulo en radianes
+    const endAngle = validPercentage * -3.6; // Esto convierte el porcentaje a un ángulo en grados
+
+    // Asegurarse de que el ángulo no sea NaN
+    if (isNaN(endAngle)) {
+        console.error("Invalid angle calculation for percentage:", validPercentage);
+    }
+
     const data = [
         {
             name: "progress",
-            value: percentage,
+            value: validPercentage,
             fill: fillColor,
         },
     ];
-    // transform from percentage to angle in radians
-    const endAngle = percentage * -3.6;
 
     return (
         <ChartContainer config={{}} className="w-6 h-6 -rotate-90 ">

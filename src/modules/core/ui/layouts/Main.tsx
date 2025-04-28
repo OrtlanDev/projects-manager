@@ -1,7 +1,7 @@
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/modules/core/ui/components/shadcn/dialog";
 import { SidebarProvider, SidebarTrigger } from "@/modules/core/ui/components/shadcn/sidebar";
-import Sidebar from "@/modules/navigation/ui/components/Sidebar";
+import AppSidebar from "@/modules/navigation/ui/components/appSidebar";
 import ProjectForm from "@/modules/projects/ui/components/ProjectForm";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import { Outlet } from "react-router-dom";
@@ -9,7 +9,7 @@ import { Outlet } from "react-router-dom";
 export default function MainLayout() {
     return (
         <SidebarProvider className="flex w-full">
-            <Sidebar />
+            <AppSidebar />
             <div className="flex flex-col w-full">
                 <Header />
                 <main className="w-full p-4 lg:p-6 mt-15">

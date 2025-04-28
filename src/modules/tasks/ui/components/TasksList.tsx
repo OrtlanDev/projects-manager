@@ -10,19 +10,17 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { CirclePlus, MoreHorizontal } from "lucide-react";
+import { CircleCheck, CirclePlus, CircleX, Copy } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/modules/core/ui/components/shadcn/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/modules/core/ui/components/shadcn/dialog";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/modules/core/ui/components/shadcn/dropdown-menu";
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogTitle,
+    DialogTrigger,
+} from "@/modules/core/ui/components/shadcn/dialog";
 import {
     Table,
     TableBody,
@@ -32,37 +30,66 @@ import {
     TableRow,
 } from "@/modules/core/ui/components/shadcn/table";
 import { Tabs, TabsList, TabsTrigger } from "@/modules/core/ui/components/shadcn/tabs";
-import { taskList_md } from "@/modules/projects/ui/mock/taskList";
+import { useParams } from "react-router-dom";
+import { findTasks, updateTask } from "../../api/tasksService"; // Asegúrate de importar updateTask
 import { TaskForm } from "./TaskForm";
 
 export type TPriority = "LOW" | "MEDIUM" | "HIGH";
 
 export type Task = {
     id: number;
-    column: string;
-    title: string;
-    priority: TPriority;
+    name: string;
     description: string | null;
+    priority: TPriority;
+    is_completed: boolean;
 };
 
 export function TaskList() {
+    const { projectId } = useParams<{ projectId: string }>();
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [selectedTab, setSelectedTab] = React.useState("toDo");
+    const [selectedTab, setSelectedTab] = React.useState<"todo" | "completed">("todo");
+    const [tasks, setTasks] = React.useState<Task[]>([]);
+    const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-    const columnNameMap: { [key: string]: string } = {
-        toDo: "To Do",
-        inProgress: "In Progress",
-        completed: "Completed",
+    React.useEffect(() => {
+        const fetchTasks = async () => {
+            if (!projectId) return;
+            try {
+                setIsLoading(true);
+                const data = await findTasks(projectId);
+                setTasks(data);
+            } catch (error) {
+                console.error("Error fetching tasks:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTasks();
+    }, [projectId]);
+
+    const handleToggleStatus = async (taskId: number, is_completed: boolean) => {
+        if (!projectId) {
+            return;
+        }
+
+        try {
+            const updatedTask = await updateTask(taskId.toString(), projectId, { is_completed });
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task.id === taskId ? { ...task, is_completed: updatedTask.is_completed } : task
+                )
+            );
+        } catch (error) {
+            console.error("Error updating task status:", error);
+        }
     };
 
-    const data = React.useMemo(() => taskList_md, []);
-
-    const filteredData = React.useMemo(
-        () => data.filter((task) => task.column === columnNameMap[selectedTab]),
-        [data, selectedTab]
-    );
+    const filteredData = React.useMemo(() => {
+        return tasks.filter((task) => (selectedTab === "todo" ? !task.is_completed : task.is_completed));
+    }, [tasks, selectedTab]);
 
     const columns = React.useMemo<ColumnDef<Task>[]>(
         () => [
@@ -70,13 +97,23 @@ export function TaskList() {
                 id: "details",
                 header: "Details",
                 cell: ({ row }) => {
-                    const { title, description, priority } = row.original;
+                    const { name, description, priority } = row.original;
                     return (
                         <div className="flex items-center space-x-4">
                             <div className="p-2">
                                 <div className="flex items-center gap-2 w-max mb-1">
-                                    <div className="font-semibold text-[16px]">{title}</div>
-                                    <div className="text-sm px-2 py-1 bg-gray-100 rounded-md">{priority}</div>
+                                    <div className="font-semibold text-[16px]">{name}</div>
+                                    <div
+                                        className={`text-sm px-2 py-1 rounded-md ${
+                                            priority === "HIGH"
+                                                ? "bg-red-100 text-red-800"
+                                                : priority === "MEDIUM"
+                                                ? "bg-yellow-100 text-yellow-800"
+                                                : "bg-green-100 text-green-800"
+                                        }`}
+                                    >
+                                        {priority}
+                                    </div>
                                 </div>
                                 {description && (
                                     <div className="text-sm text-muted-foreground">
@@ -94,22 +131,30 @@ export function TaskList() {
                 cell: ({ row }) => {
                     const task = row.original;
                     return (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                    <span className="sr-only">Open menu</span>
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(task.title)}>
-                                    Copy Title
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>View Details</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="gap-2 flex">
+                            <Button
+                                variant="outline"
+                                className="h-8 w-8 p-0"
+                                onClick={() =>
+                                    navigator.clipboard.writeText(
+                                        task.name + "(" + task.priority + "): " + task.description
+                                    )
+                                }
+                            >
+                                <Copy />
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="h-8 w-8 p-0"
+                                onClick={() => handleToggleStatus(task.id, !task.is_completed)}
+                            >
+                                {!task.is_completed ? (
+                                    <CircleCheck className="text-green-900" />
+                                ) : (
+                                    <CircleX className="text-red-800" />
+                                )}
+                            </Button>
+                        </div>
                     );
                 },
             },
@@ -137,22 +182,29 @@ export function TaskList() {
     return (
         <div className="w-full">
             <div className="flex-between mb-2 mt-6">
-                <Tabs value={selectedTab} onValueChange={setSelectedTab} defaultValue="toDo" className="w-[400px]">
-                    <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="toDo">To Do</TabsTrigger>
-                        <TabsTrigger value="inProgress">In Progress</TabsTrigger>
+                <Tabs
+                    value={selectedTab}
+                    onValueChange={(value) => setSelectedTab(value as "todo" | "completed")}
+                    defaultValue="todo"
+                    className="w-[300px]"
+                >
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="todo">To Do</TabsTrigger>
                         <TabsTrigger value="completed">Completed</TabsTrigger>
                     </TabsList>
                 </Tabs>
+
                 <Dialog>
-                    <DialogTrigger>
+                    <DialogTrigger asChild>
                         <Button>
                             <CirclePlus />
                             Add Task
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <TaskForm projectId="1" />
+                        <DialogTitle className="hidden"></DialogTitle>
+                        <DialogDescription className="hidden"></DialogDescription>
+                        <TaskForm />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -185,7 +237,7 @@ export function TaskList() {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No tasks in this category.
+                                    {isLoading ? "Loading tasks..." : "No tasks in this category."}
                                 </TableCell>
                             </TableRow>
                         )}

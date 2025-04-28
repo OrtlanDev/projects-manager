@@ -1,13 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { z } from "zod";
 
-import { cn } from "@/modules/core/lib/utils";
 import { Button } from "@/modules/core/ui/components/shadcn/button";
 import {
     Form,
@@ -18,7 +16,6 @@ import {
     FormMessage,
 } from "@/modules/core/ui/components/shadcn/form";
 import { Input } from "@/modules/core/ui/components/shadcn/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/modules/core/ui/components/shadcn/popover";
 import {
     Select,
     SelectContent,
@@ -27,36 +24,26 @@ import {
     SelectValue,
 } from "@/modules/core/ui/components/shadcn/select";
 import { Textarea } from "@/modules/core/ui/components/shadcn/textarea";
+import { createTask } from "../../api/tasksService";
 
 const taskFormSchema = z.object({
-    title: z.string().min(2, {
+    name: z.string().min(1, {
         message: "Task title must be at least 2 characters.",
     }),
-    description: z.string().min(10, {
-        message: "Description must be at least 10 characters.",
-    }),
-    status: z.enum(["To Do", "In Progress", "Done"]),
-    priority: z.enum(["HIGH", "MEDIUM", "LOW"]),
-    dueDate: z.date({
-        required_error: "A due date is required.",
-    }),
+    description: z.string(),
+    priority: z.enum(["high", "medium", "low"]),
 });
 
 type TaskFormValues = z.infer<typeof taskFormSchema>;
 
-interface TaskFormProps {
-    projectId: string;
-}
-
-export function TaskForm({ projectId }: TaskFormProps) {
+export function TaskForm() {
+    const { projectId } = useParams<{ projectId: string }>();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const defaultValues: Partial<TaskFormValues> = {
-        title: "",
+        name: "",
         description: "",
-        status: "To Do",
-        priority: "MEDIUM",
-        dueDate: new Date(),
+        priority: "medium",
     };
 
     const form = useForm<TaskFormValues>({
@@ -64,13 +51,22 @@ export function TaskForm({ projectId }: TaskFormProps) {
         defaultValues,
     });
 
+    const nameInputRef = form.register("name").ref;
+
     async function onSubmit(data: TaskFormValues) {
         setIsSubmitting(true);
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        try {
+            const taskData = { ...data, project: projectId };
+            await createTask(taskData);
+            console.log("Task created successfully:", taskData);
 
-        console.log({ ...data, projectId });
+            form.reset();
+            form.setFocus("name");
+        } catch (error) {
+            console.error("Error creating task:", error);
+        }
+
         setIsSubmitting(false);
     }
 
@@ -80,12 +76,12 @@ export function TaskForm({ projectId }: TaskFormProps) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                     control={form.control}
-                    name="title"
+                    name="name"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Task Title</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter task title" {...field} />
+                                <Input placeholder="Enter task title" {...field} ref={nameInputRef} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -109,29 +105,6 @@ export function TaskForm({ projectId }: TaskFormProps) {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <FormField
                         control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Status</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl className="w-full">
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a status" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="To Do">To Do</SelectItem>
-                                        <SelectItem value="In Progress">In Progress</SelectItem>
-                                        <SelectItem value="Done">Done</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
                         name="priority"
                         render={({ field }) => (
                             <FormItem>
@@ -143,39 +116,11 @@ export function TaskForm({ projectId }: TaskFormProps) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="HIGH">High</SelectItem>
-                                        <SelectItem value="MEDIUM">Medium</SelectItem>
-                                        <SelectItem value="LOW">Low</SelectItem>
+                                        <SelectItem value="high">High</SelectItem>
+                                        <SelectItem value="medium">Medium</SelectItem>
+                                        <SelectItem value="low">Low</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="dueDate"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Due Date</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-full pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                            >
-                                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start"></PopoverContent>
-                                </Popover>
                                 <FormMessage />
                             </FormItem>
                         )}

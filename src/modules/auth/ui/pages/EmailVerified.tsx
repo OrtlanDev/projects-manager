@@ -12,6 +12,7 @@ export default function VerifiedEmailPage() {
     const { error, response, isLoading } = useVerifyEmail(token);
 
     useEffect(() => {
+        console.log(response);
         if (response?.user?.username && response?.user?.email) {
             setUser({ username: response.user.username, email: response.user.email });
         }
@@ -31,7 +32,8 @@ export default function VerifiedEmailPage() {
             </div>
         );
     }
-    console.log(response);
+
+    console.log(" response: " + error, " response: " + response?.user, user!);
     if (error || !response?.user) {
         return ExpiredEmail();
     }
@@ -52,13 +54,8 @@ function VerifiedEmail(user: User) {
                         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                             <MailCheck className="h-8 w-8 text-green-900" />
                         </div>
-                        <CardTitle className="text-2xl font-bold text-center">
-                            Congratulations {user.username}!
-                        </CardTitle>
-                        <CardDescription className="text-center">
-                            Your email, <span className="font-medium text-foreground">{user.email}</span> has been
-                            verified.
-                        </CardDescription>
+                        <CardTitle className="text-2xl font-bold text-center">Congratulations!</CardTitle>
+                        <CardDescription className="text-center">Your email,has been verified.</CardDescription>
                     </CardHeader>
 
                     <CardContent className="space-y-4">

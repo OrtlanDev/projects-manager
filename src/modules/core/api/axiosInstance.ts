@@ -100,7 +100,10 @@ axiosInstance.interceptors.response.use(
                     } else if (refreshError.response.status === 401) {
                         localStorage.removeItem("accessToken");
                         localStorage.removeItem("refreshToken");
-                        window.location.href = "/login";
+                        localStorage.removeItem("id");
+                        localStorage.removeItem("authenticatedUser");
+                        localStorage.removeItem("isAuthenticated");
+                        window.location.href = "/auth/login";
                     }
                 }
 

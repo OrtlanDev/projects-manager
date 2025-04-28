@@ -38,14 +38,14 @@ export default function VerifiedEmailPage() {
         return ExpiredEmail();
     }
 
-    return VerifiedEmail(user!);
+    return VerifiedEmail();
 }
 
 const handleGoToDashboard = () => {
     console.log("login");
 };
 
-function VerifiedEmail(user: User) {
+function VerifiedEmail() {
     return (
         <div className="flex-center min-h-screen">
             <div className="w-full max-w-md">
